@@ -55,7 +55,7 @@ public class MaskRenderer : MonoBehaviour
 
     private RenderTexture maskTexture;
 
-    //Store thos properties so we can avoid string lookups in Update
+    //Store these properties so we can avoid string lookups in Update
     private static readonly int textureSizeId = Shader.PropertyToID("_TextureSize");
     private static readonly int cellCountId = Shader.PropertyToID("_CellCount");
     private static readonly int mapSizeId = Shader.PropertyToID("_MapSize");
@@ -131,11 +131,11 @@ public class MaskRenderer : MonoBehaviour
         }
 
         if (buffer == null)
-            buffer = new ComputeBuffer(bufferElements.Count * 3, sizeof(float));
+            buffer = new ComputeBuffer(bufferElements.Count * 3, sizeof(float)); //This should only happen on first frame
 
         //Set the buffer data and parse it to the compute shader
         buffer.SetData(bufferElements);
-        computeShader.SetBuffer(0, cellBufferId, buffer);
+        computeShader.SetBuffer(0, cellBufferId, buffer); //The 0 here is the "kernal index"
 
         //Set other variables needed in the compute function
         computeShader.SetInt(cellCountId, bufferElements.Count);
@@ -145,6 +145,6 @@ public class MaskRenderer : MonoBehaviour
         //Execute the compute shader
         //Our thread group size is 8x8=64, 
         //thus we have to dispatch (TextureSize / 8) * (TextureSize / 8) thread groups
-        computeShader.Dispatch(0, Mathf.CeilToInt(TextureSize / 8.0f), Mathf.CeilToInt(TextureSize / 8.0f), 1);
+        computeShader.Dispatch(0, Mathf.CeilToInt(TextureSize / 8.0f), Mathf.CeilToInt(TextureSize / 8.0f), 1); //The 8 here is... arbitrary?
     }
 }
