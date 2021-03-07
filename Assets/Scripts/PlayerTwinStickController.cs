@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerTwinStickController : MonoBehaviour
 {
     public float moveSpeed = 6f;
+    public LayerMask layerMask; //configured in the editor for just the ground plane
 
     Rigidbody rb;
     Camera viewCamera;
@@ -20,9 +21,17 @@ public class PlayerTwinStickController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 mousePos = viewCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, viewCamera.transform.position.y));
-        Debug.Log($"MousePos: {mousePos}");
-        transform.LookAt(mousePos + Vector3.up * transform.position.y);
+        //Can't do screen to world point for this - need to use a raycast instead is my guess
+        //Vector3 mousePos = viewCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, viewCamera.transform.position.y));
+        Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+        {
+            Vector3 mousePos = hit.point;
+            //Debug.Log($"MousePos: {mousePos}");
+            transform.LookAt(mousePos + Vector3.up * transform.position.y);
+        }
         velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
     }
 
