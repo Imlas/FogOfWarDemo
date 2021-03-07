@@ -51,7 +51,8 @@ Shader "Hidden/FogOfWar"
                 // red = 1, blue = 0, we want alpha to be ~0.5; (make this publically accessable?)
                 // red = 0, blue = 0, we want alpha to be 1;
 
-                col.a = 2.0f - col.r * 1.5f - col.b * 0.5f;
+                //col.a = 2.0f - col.r * 1.5f - col.b * 0.5f;
+                col.a = 2.0f - col.r * 1.2f - col.b * 0.8f;
 
 
                 return fixed4(0,0,0,col.a);
