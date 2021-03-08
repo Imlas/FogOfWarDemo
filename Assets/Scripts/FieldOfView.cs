@@ -15,15 +15,21 @@ public class FieldOfView : MonoBehaviour
     public List<Transform> visibleTargets = new List<Transform>();
 
     public float meshResolution;
+    public int edgeResolveIterations;
+    public float edgeDistanceThreshold;
+    public float obstaclePeekDist;
 
-    public MeshFilter viewMeshFilter;
+
+    public MeshFilter viewMeshFilterPrimary;
+    public MeshFilter viewMeshFilterSecondary;
     Mesh viewMesh;
 
     private void Start()
     {
         viewMesh = new Mesh();
         viewMesh.name = "FoV Mesh";
-        viewMeshFilter.mesh = viewMesh;
+        viewMeshFilterPrimary.mesh = viewMesh;
+        viewMeshFilterSecondary.mesh = viewMesh;
 
         StartCoroutine("FindTargetsWithDelay", 0.2f);
     }
@@ -76,12 +82,33 @@ public class FieldOfView : MonoBehaviour
         float stepAngleSize = viewAngle / stepCount;
         List<Vector3> viewPoints = new List<Vector3>();
 
+        ViewCastInfo oldViewCast = new ViewCastInfo();
+
         for (int i = 0; i < stepCount; i++)
         {
             float angle = transform.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
             //Debug.DrawLine(transform.position, transform.position + DirFromAngle(angle, true) * viewRadius, Color.red);
             ViewCastInfo newViewCast = ViewCast(angle);
+
+            if(i > 0) //Can't compare the first time 'round since oldViewCast hasn't done anything yet
+            {
+                bool edgeDistExceeded = Mathf.Abs(oldViewCast.dist - newViewCast.dist) > edgeDistanceThreshold;
+                if(oldViewCast.hit != newViewCast.hit || (oldViewCast.hit && newViewCast.hit && edgeDistExceeded)) //If one of the casts hit something and the other didn't
+                {
+                    EdgeInfo edge = FindEdge(oldViewCast, newViewCast);
+                    if(edge.pointA != Vector3.zero)
+                    {
+                        viewPoints.Add(edge.pointA);
+                    }
+                    if (edge.pointB != Vector3.zero)
+                    {
+                        viewPoints.Add(edge.pointB);
+                    }
+                }
+            }
+
             viewPoints.Add(newViewCast.point);
+            oldViewCast = newViewCast;
         }
 
         int vertexCount = viewPoints.Count + 1;
@@ -92,7 +119,7 @@ public class FieldOfView : MonoBehaviour
 
         for(int i = 0; i < vertexCount - 1; i++)
         {
-            vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i]);
+            vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i] + Vector3.forward * obstaclePeekDist);
 
             if( i < vertexCount - 2)
             {
@@ -106,6 +133,37 @@ public class FieldOfView : MonoBehaviour
         viewMesh.vertices = vertices;
         viewMesh.triangles = triangles;
         viewMesh.RecalculateNormals();
+    }
+
+    //Takes in two view casts, one of which hit and object, the other didn't
+    //Returns two points which are very close to the edge
+    EdgeInfo FindEdge(ViewCastInfo minViewCast, ViewCastInfo maxViewCast)
+    {
+        float minAngle = minViewCast.angle;
+        float maxAngle = maxViewCast.angle;
+        Vector3 minPoint = minViewCast.point;
+        Vector3 maxPoint = maxViewCast.point;
+
+        for(int i = 0; i < edgeResolveIterations; i++)
+        {
+            float angle = (minAngle + maxAngle) / 2;
+            ViewCastInfo newViewCast = ViewCast(angle); //A view cast going at the middle point
+
+            bool edgeDistExceeded = Mathf.Abs(minViewCast.dist - newViewCast.dist) > edgeDistanceThreshold;
+
+            if (newViewCast.hit == minViewCast.hit && !edgeDistExceeded)
+            {
+                minAngle = angle;
+                minPoint = newViewCast.point;
+            }
+            else
+            {
+                maxAngle = angle;
+                maxPoint = newViewCast.point;
+            }
+        }
+
+        return new EdgeInfo(minPoint, maxPoint);
     }
 
     ViewCastInfo ViewCast(float globalAngle)
@@ -147,6 +205,18 @@ public class FieldOfView : MonoBehaviour
             point = _point;
             dist = _dist;
             angle = _angle;
+        }
+    }
+
+    public struct EdgeInfo
+    {
+        public Vector3 pointA; 
+        public Vector3 pointB; 
+
+        public EdgeInfo(Vector3 _pointA, Vector3 _pointB)
+        {
+            pointA = _pointA;
+            pointB = _pointB;
         }
     }
 }
