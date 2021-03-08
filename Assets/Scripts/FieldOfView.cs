@@ -7,19 +7,24 @@ public class FieldOfView : MonoBehaviour
     public float viewRadius;
     [Range(0,360)]
     public float viewAngle;
-    public bool isCircle = true;
 
+    [Header("FoW Object Masks")]
+    public int visTargetLayer;
+    public int invisTargetLayer;
     public LayerMask targetMask;
+    public List<GameObject> visibleTargets = new List<GameObject>();
+
+    [Header("LoS Blocker Mask")]
     public LayerMask obstacleMask;
 
-    public List<Transform> visibleTargets = new List<Transform>();
 
+    [Header("FoV Resolution")]
     public float meshResolution;
     public int edgeResolveIterations;
     public float edgeDistanceThreshold;
     public float obstaclePeekDist;
 
-
+    [Header("FoV Mesh Filters")]
     public MeshFilter viewMeshFilterPrimary;
     public MeshFilter viewMeshFilterSecondary;
     Mesh viewMesh;
@@ -67,12 +72,29 @@ public class FieldOfView : MonoBehaviour
                 if(!Physics.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask))
                 {
                     //No obstacle detected between the player and the target
-                    visibleTargets.Add(target);
+                    visibleTargets.Add(target.gameObject);
                 }
             }
 
         }
 
+        ToggleVisibilityOfTargets();
+
+    }
+
+    void ToggleVisibilityOfTargets()
+    {
+        //Will first get a list of all targets and switch them to an "invisible" layer
+        foreach(GameObject target in TargetManager.Instance.GetTargets())
+        {
+            target.layer = invisTargetLayer;
+        }
+
+        //Then will switch the layer of all visible targets to visible
+        foreach(GameObject target in visibleTargets)
+        {
+            target.layer = visTargetLayer;
+        }
     }
 
     //Makes a Mesh that correctly accounts for the direction/facing/LoS blockers

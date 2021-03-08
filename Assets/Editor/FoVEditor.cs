@@ -18,9 +18,9 @@ public class FoVEditor : Editor
         Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleB * fow.viewRadius);
 
         Handles.color = Color.red;
-        foreach(Transform visibleTargets in fow.visibleTargets)
+        foreach(GameObject visibleTargets in fow.visibleTargets)
         {
-            Handles.DrawLine(fow.transform.position, visibleTargets.position);
+            Handles.DrawLine(fow.transform.position, visibleTargets.transform.position);
         }
     }
 }
