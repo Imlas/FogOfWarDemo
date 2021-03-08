@@ -7,6 +7,7 @@ public class FieldOfView : MonoBehaviour
     public float viewRadius;
     [Range(0,360)]
     public float viewAngle;
+    public bool isCircle = false;
 
     [Header("FoW Object Masks")]
     public int visTargetLayer;
@@ -135,7 +136,15 @@ public class FieldOfView : MonoBehaviour
 
         int vertexCount = viewPoints.Count + 1;
         Vector3[] vertices = new Vector3[vertexCount];
-        int[] triangles = new int[(vertexCount - 2) * 3];
+        int[] triangles;
+        if(!isCircle)
+        {
+            triangles = new int[(vertexCount - 2) * 3];
+        }
+        else
+        {
+            triangles = new int[(vertexCount - 2) * 3 + 3];
+        }
 
         vertices[0] = Vector3.zero;
 
@@ -149,6 +158,12 @@ public class FieldOfView : MonoBehaviour
                 triangles[i * 3 + 1] = i + 1;
                 triangles[i * 3 + 2] = i + 2;
             }
+        }
+        if(isCircle)
+        {
+            triangles[triangles.Length - 3] = 0;
+            triangles[triangles.Length - 2] = vertexCount-1;
+            triangles[triangles.Length - 1] = 1;
         }
 
         viewMesh.Clear();
