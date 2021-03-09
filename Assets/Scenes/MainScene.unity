@@ -4804,8 +4804,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainFoWTexture: {fileID: 8400000, guid: a49d6bf6b08d0c34d986e5248c1e306b, type: 2}
   secondaryFoWTexture: {fileID: 8400000, guid: 6a2fbac258ee48540952612123d76968, type: 2}
+  tempTexture: {fileID: 8400000, guid: 5460146baa3a15a4eb6c4d576c03c9eb, type: 2}
   combinedFoWTexture: {fileID: 8400000, guid: 39c22ba07c781ed48bc5c36b30769599, type: 2}
   cookieGenMat: {fileID: 2100000, guid: 38cfefe0eb859a145a4579848e6ed74c, type: 2}
+  blurMat: {fileID: 2100000, guid: ece05e4021cb9134694b460b3794e3fc, type: 2}
 --- !u!1 &1521622968
 GameObject:
   m_ObjectHideFlags: 0
