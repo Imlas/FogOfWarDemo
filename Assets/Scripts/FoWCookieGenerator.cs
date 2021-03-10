@@ -18,10 +18,15 @@ public class FoWCookieGenerator : MonoBehaviour
     {
         //ResetWorkingTexture();
 
-        Graphics.Blit(mainFoWTexture, combinedFoWTexture);
-        Graphics.Blit(secondaryFoWTexture, combinedFoWTexture, cookieGenMat);
-        Graphics.Blit(combinedFoWTexture, tempTexture, blurMat);
-        Graphics.Blit(tempTexture, combinedFoWTexture);
+        //Graphics.Blit(mainFoWTexture, combinedFoWTexture);
+        //Graphics.Blit(secondaryFoWTexture, combinedFoWTexture, cookieGenMat);
+        //Graphics.Blit(combinedFoWTexture, tempTexture, blurMat);
+        //Graphics.Blit(tempTexture, combinedFoWTexture);
+
+        Graphics.Blit(mainFoWTexture, tempTexture);
+        Graphics.Blit(secondaryFoWTexture, tempTexture, cookieGenMat);
+        Graphics.Blit(tempTexture, combinedFoWTexture, blurMat);
+        //Graphics.Blit(tempTexture, combinedFoWTexture);
     }
 
     //void ResetWorkingTexture()
