@@ -12,6 +12,8 @@ public class FoWCookieGenerator : MonoBehaviour
     public Material cookieGenMat; //A material with the appropriate shader to add the two textures
     public Material blurMat;
 
+    public Material cookie;
+
 
     // Update is called once per frame
     void Update()
@@ -26,11 +28,7 @@ public class FoWCookieGenerator : MonoBehaviour
         Graphics.Blit(mainFoWTexture, tempTexture);
         Graphics.Blit(secondaryFoWTexture, tempTexture, cookieGenMat);
         Graphics.Blit(tempTexture, combinedFoWTexture, blurMat);
-        //Graphics.Blit(tempTexture, combinedFoWTexture);
     }
 
-    //void ResetWorkingTexture()
-    //{
-    //    Graphics.Blit(blackTexture, combinedFoWTexture);
-    //}
+
 }
