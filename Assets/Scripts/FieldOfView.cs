@@ -26,6 +26,7 @@ public class FieldOfView : MonoBehaviour
     public int edgeResolveIterations;
     public float edgeDistanceThreshold;
     public float obstaclePeekDist;
+    public float targetPeekDist;
 
     [Header("FoV Mesh Filters")]
     public MeshFilter viewMeshFilterPrimary;
@@ -60,7 +61,7 @@ public class FieldOfView : MonoBehaviour
     {
         visibleTargets.Clear();
 
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask); //All targets within the view distance
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius + targetPeekDist, targetMask); //All targets within the view distance
 
         for (int i = 0; i < targetsInViewRadius.Length; i++)
         {

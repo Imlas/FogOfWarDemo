@@ -2337,6 +2337,7 @@ MonoBehaviour:
   edgeResolveIterations: 8
   edgeDistanceThreshold: 0.25
   obstaclePeekDist: 0
+  targetPeekDist: 0.1
   viewMeshFilterPrimary: {fileID: 308039804}
   viewMeshFilterSecondary: {fileID: 189685784}
 --- !u!1 &738605182
