@@ -2271,6 +2271,7 @@ GameObject:
   m_Component:
   - component: {fileID: 727463015}
   - component: {fileID: 727463016}
+  - component: {fileID: 727463017}
   m_Layer: 0
   m_Name: FoVAnchor
   m_TagString: Untagged
@@ -2301,13 +2302,43 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 727463014}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46b20014cdcc5ee4cb24ab01ca1a305c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   targetTrans: {fileID: 1774999881}
   offset: {x: 0, y: 0, z: 0}
+--- !u!114 &727463017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 727463014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec84370a7d523e14896a85a408527165, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewRadius: 5
+  viewAngle: 360
+  isCircle: 1
+  visTargetLayer: 11
+  invisTargetLayer: 12
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 6144
+  visibleTargets: []
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 128
+  meshResolution: 0.5
+  edgeResolveIterations: 8
+  edgeDistanceThreshold: 0.25
+  obstaclePeekDist: 0
+  viewMeshFilterPrimary: {fileID: 308039804}
+  viewMeshFilterSecondary: {fileID: 189685784}
 --- !u!1 &738605182
 GameObject:
   m_ObjectHideFlags: 0
@@ -3267,7 +3298,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1191952687}
-  m_LocalRotation: {x: 0.5847103, y: 0.0000000100697015, z: -0.0000000072578303, w: 0.8112422}
+  m_LocalRotation: {x: 0.5847103, y: -0.000000019740359, z: 0.0000000142280445, w: 0.8112422}
   m_LocalPosition: {x: 0, y: 16, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -4897,7 +4928,6 @@ GameObject:
   - component: {fileID: 1774999879}
   - component: {fileID: 1774999882}
   - component: {fileID: 1774999883}
-  - component: {fileID: 1774999884}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -4987,36 +5017,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1774999884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1774999878}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec84370a7d523e14896a85a408527165, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewRadius: 5
-  viewAngle: 360
-  isCircle: 1
-  visTargetLayer: 11
-  invisTargetLayer: 12
-  targetMask:
-    serializedVersion: 2
-    m_Bits: 6144
-  visibleTargets: []
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 128
-  meshResolution: 0.5
-  edgeResolveIterations: 8
-  edgeDistanceThreshold: 0.25
-  obstaclePeekDist: 0
-  viewMeshFilterPrimary: {fileID: 308039804}
-  viewMeshFilterSecondary: {fileID: 189685784}
 --- !u!1 &1782699302
 GameObject:
   m_ObjectHideFlags: 0
@@ -5755,7 +5755,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1967761544}
-  m_LocalRotation: {x: 0.5847103, y: 0.0000000100697015, z: -0.0000000072578303, w: 0.8112422}
+  m_LocalRotation: {x: 0.5847103, y: -0.000000019740359, z: 0.0000000142280445, w: 0.8112422}
   m_LocalPosition: {x: 0, y: 16, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
