@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FieldOfView : MonoBehaviour
 {
+    //One spot for improvement with this would be the detection of interior edges, perhaps by comparing the normal of the raycast hit and running a similar edge detection as the hit vs nohit outer edge
+
     public float viewRadius;
     [Range(0,360)]
     public float viewAngle;
@@ -116,16 +118,23 @@ public class FieldOfView : MonoBehaviour
             if(i > 0) //Can't compare the first time 'round since oldViewCast hasn't done anything yet
             {
                 bool edgeDistExceeded = Mathf.Abs(oldViewCast.dist - newViewCast.dist) > edgeDistanceThreshold;
-                if(oldViewCast.hit != newViewCast.hit || (oldViewCast.hit && newViewCast.hit && edgeDistExceeded)) //If one of the casts hit something and the other didn't
+                //If one of the casts hit something and the other didn't *or* if both hit, but likely hit different things
+                if (oldViewCast.hit != newViewCast.hit || (oldViewCast.hit && newViewCast.hit && edgeDistExceeded)) 
                 {
+                    ///Debug.DrawLine(transform.position, oldViewCast.point, Color.red);
+                    //Debug.DrawLine(transform.position, newViewCast.point, Color.red);
+
                     EdgeInfo edge = FindEdge(oldViewCast, newViewCast);
                     if(edge.pointA != Vector3.zero)
                     {
                         viewPoints.Add(edge.pointA);
+                        //Debug.DrawLine(transform.position, edge.pointA, Color.green);
+
                     }
                     if (edge.pointB != Vector3.zero)
                     {
                         viewPoints.Add(edge.pointB);
+                        //Debug.DrawLine(transform.position, edge.pointB, Color.green);
                     }
                 }
             }
@@ -151,8 +160,9 @@ public class FieldOfView : MonoBehaviour
         for(int i = 0; i < vertexCount - 1; i++)
         {
             vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i] + Vector3.forward * obstaclePeekDist);
+            //Debug.DrawLine(transform.position, viewPoints[i], Color.red);
 
-            if( i < vertexCount - 2)
+            if ( i < vertexCount - 2)
             {
                 triangles[i * 3] = 0;
                 triangles[i * 3 + 1] = i + 1;
@@ -181,10 +191,15 @@ public class FieldOfView : MonoBehaviour
         Vector3 minPoint = minViewCast.point;
         Vector3 maxPoint = maxViewCast.point;
 
-        for(int i = 0; i < edgeResolveIterations; i++)
+        //Debug.DrawLine(transform.position, minViewCast.point, Color.green);
+        //Debug.DrawLine(transform.position, maxViewCast.point, Color.green);
+
+        for (int i = 0; i < edgeResolveIterations; i++)
         {
             float angle = (minAngle + maxAngle) / 2;
             ViewCastInfo newViewCast = ViewCast(angle); //A view cast going at the middle point
+
+            //Debug.DrawLine(transform.position, newViewCast.point, Color.red);
 
             bool edgeDistExceeded = Mathf.Abs(minViewCast.dist - newViewCast.dist) > edgeDistanceThreshold;
 
