@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 using UnityEngine.InputSystem;
 
-public class PlayerTwinStickController : MonoBehaviour
+public class PlayerTwinStickController : NetworkBehaviour
 {
     public float moveSpeed = 6f;
     public LayerMask layerMask; //configured in the editor for just the ground plane
@@ -12,16 +13,20 @@ public class PlayerTwinStickController : MonoBehaviour
     Camera viewCamera;
     Vector3 velocity;
 
-    // Start is called before the first frame update
-    void Start()
+    //The "network" version of Start
+    public override void OnStartAuthority()
     {
         rb = GetComponent<Rigidbody>();
         viewCamera = Camera.main;
     }
 
-    // Update is called once per frame
-    void Update()
+    //Will only run on clients, not on the server
+    [ClientCallback]
+    private void Update()
     {
+        //We only want to be running this for the "player" that the client owns
+        if (!hasAuthority) { return; }
+
         //Can't do screen to world point for this - need to use a raycast instead is my guess
         //Vector3 mousePos = viewCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, viewCamera.transform.position.y));
         Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);
@@ -38,6 +43,6 @@ public class PlayerTwinStickController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
+        //rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
     }
 }

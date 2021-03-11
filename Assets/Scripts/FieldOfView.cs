@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class FieldOfView : MonoBehaviour
+public class FieldOfView : NetworkBehaviour
 {
     //One spot for improvement with this would be the detection of interior edges, perhaps by comparing the normal of the raycast hit and running a similar edge detection as the hit vs nohit outer edge
 
@@ -33,7 +34,8 @@ public class FieldOfView : MonoBehaviour
     public MeshFilter viewMeshFilterSecondary;
     Mesh viewMesh;
 
-    private void Start()
+    //The "network" version of Start
+    public override void OnStartAuthority()
     {
         viewMesh = new Mesh();
         viewMesh.name = "FoV Mesh";
