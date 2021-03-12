@@ -111,3 +111,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   m_stencilMask: 255
+--- !u!114 &6853521051217339756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52c335cd648c40248878d884b3eb56fb, type: 3}
+  m_Name: NewDrawFullscreenFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    renderPassEvent: 150
+    blitMaterial: {fileID: 2100000, guid: 752d3b84f25670840886c7f036e05f62, type: 2}
+    blitMaterialPassIndex: -1
+    sourceType: 0
+    destinationType: 0
+    sourceTextureId: _SourceTexture
+    destinationTextureId: _DestinationTexture

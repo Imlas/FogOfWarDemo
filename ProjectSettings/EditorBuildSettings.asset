@@ -11,8 +11,11 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Mirror/Examples/Pong/Scenes/Scene.unity
     guid: 89a84548859e3b643b4fb27984dc2b0d
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MultiplayerTut.unity
     guid: a9139abd5da935b40a7f04ce07b3921c
+  - enabled: 1
+    path: Assets/Scenes/FoWMultiDemo.unity
+    guid: 135e60b31bac2354bad90d63f42eac5e
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 5c9da6b4cb767cd4ab88597c2805c1b4, type: 2}
