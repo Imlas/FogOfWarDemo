@@ -38,6 +38,12 @@ public class FieldOfView : NetworkBehaviour
     //The "network" version of Start
     public override void OnStartAuthority()
     {
+
+    }
+
+    private void Start()
+    {
+        //If we move this up to OnStartAuthority, then the FoV meshes will be per-player
         viewMesh = new Mesh();
         viewMesh.name = "FoV Mesh";
         viewMeshFilterPrimary.mesh = viewMesh;
@@ -59,7 +65,7 @@ public class FieldOfView : NetworkBehaviour
     [ClientCallback]
     private void LateUpdate()
     {
-        if (!isLocalPlayer) return;
+        //if (!isLocalPlayer) return;
         //Debug.Log("lateupdate");
         DrawFieldOfView();
     }
