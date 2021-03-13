@@ -53,8 +53,10 @@ public class DudeController : NetworkBehaviour
             //Debug.Log($"MousePos: {mousePos}");
             transform.LookAt(mousePos + Vector3.up * transform.position.y);
         }
-        velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
-        //rb.velocity = this.velocity;
+        //velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
+        ////rb.velocity = this.velocity;
+        //rb.MovePosition(rb.position + velocity * Time.deltaTime);
+
 
     }
 
@@ -64,7 +66,9 @@ public class DudeController : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
 
-        rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
+        velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
+
+        rb.MovePosition(transform.position + velocity * Time.deltaTime);
         //rb.velocity = this.velocity;
     }
 }
