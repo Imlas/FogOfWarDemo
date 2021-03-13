@@ -7,13 +7,20 @@ public class RenderWithoutClear : MonoBehaviour
     [SerializeField] private RenderTexture currentFoVTexture;
     [SerializeField] private RenderTexture historicFoVTexture;
     [SerializeField] private RenderTexture combinedFoVTexture;
+    [SerializeField] private RenderTexture blurredTexture;
+
     [SerializeField] private Material doesNotClearShaderMat;
     [SerializeField] private Material foVConstructionMat;
+    [SerializeField] private Material blurMat;
     [SerializeField] private Texture solidBlack;
 
     private void Start()
     {
+        Graphics.Blit(solidBlack, historicFoVTexture);
         Graphics.Blit(solidBlack, combinedFoVTexture);
+        Graphics.Blit(solidBlack, blurredTexture);
+
+
         //Debug.Break();
     }
 
@@ -22,6 +29,8 @@ public class RenderWithoutClear : MonoBehaviour
     {
         Graphics.Blit(currentFoVTexture, historicFoVTexture, doesNotClearShaderMat);
         Graphics.Blit(currentFoVTexture, combinedFoVTexture, foVConstructionMat);
+        Graphics.Blit(combinedFoVTexture, blurredTexture, blurMat);
+
 
     }
 }
