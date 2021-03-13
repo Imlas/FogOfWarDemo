@@ -42,6 +42,7 @@ public class DudeController : NetworkBehaviour
     void Update()
     {
         //We only want to be running this for the "player" that the client owns
+        if (!isLocalPlayer) return;
 
         Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;

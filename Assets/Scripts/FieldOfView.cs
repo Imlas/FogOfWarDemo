@@ -11,6 +11,7 @@ public class FieldOfView : NetworkBehaviour
     [Range(0,360)]
     public float viewAngle;
     public bool isCircle = false;
+    public Transform foVAnchor;
 
     [Header("FoW Object Masks")]
     public int visTargetLayer;
@@ -31,7 +32,7 @@ public class FieldOfView : NetworkBehaviour
 
     [Header("FoV Mesh Filters")]
     public MeshFilter viewMeshFilterPrimary;
-    public MeshFilter viewMeshFilterSecondary;
+    //public MeshFilter viewMeshFilterSecondary;
     Mesh viewMesh;
 
     //The "network" version of Start
@@ -40,7 +41,7 @@ public class FieldOfView : NetworkBehaviour
         viewMesh = new Mesh();
         viewMesh.name = "FoV Mesh";
         viewMeshFilterPrimary.mesh = viewMesh;
-        viewMeshFilterSecondary.mesh = viewMesh;
+        //viewMeshFilterSecondary.mesh = viewMesh;
 
         StartCoroutine("FindTargetsWithDelay", 0.2f);
     }
@@ -54,8 +55,12 @@ public class FieldOfView : NetworkBehaviour
         }
     }
 
+    //Will only run on clients, not on the server
+    [ClientCallback]
     private void LateUpdate()
     {
+        if (!isLocalPlayer) return;
+        //Debug.Log("lateupdate");
         DrawFieldOfView();
     }
 
@@ -63,19 +68,19 @@ public class FieldOfView : NetworkBehaviour
     {
         visibleTargets.Clear();
 
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius + targetPeekDist, targetMask); //All targets within the view distance
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(foVAnchor.position, viewRadius + targetPeekDist, targetMask); //All targets within the view distance
 
         for (int i = 0; i < targetsInViewRadius.Length; i++)
         {
             Transform target = targetsInViewRadius[i].transform;
 
-            Vector3 dirToTarget = (target.position - transform.position).normalized;
-            if(Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
+            Vector3 dirToTarget = (target.position - foVAnchor.position).normalized;
+            if(Vector3.Angle(foVAnchor.forward, dirToTarget) < viewAngle / 2)
             {
                 //The target is within the view angle
-                float distToTarget = Vector3.Distance(transform.position, target.position);
+                float distToTarget = Vector3.Distance(foVAnchor.position, target.position);
 
-                if(!Physics.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask))
+                if(!Physics.Raycast(foVAnchor.position, dirToTarget, distToTarget, obstacleMask))
                 {
                     //No obstacle detected between the player and the target
                     visibleTargets.Add(target.gameObject);
@@ -114,8 +119,8 @@ public class FieldOfView : NetworkBehaviour
 
         for (int i = 0; i < stepCount; i++)
         {
-            float angle = transform.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
-            //Debug.DrawLine(transform.position, transform.position + DirFromAngle(angle, true) * viewRadius, Color.red);
+            float angle = foVAnchor.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
+            //Debug.DrawLine(foVAnchor.position, foVAnchor.position + DirFromAngle(angle, true) * viewRadius, Color.red);
             ViewCastInfo newViewCast = ViewCast(angle);
 
             if(i > 0) //Can't compare the first time 'round since oldViewCast hasn't done anything yet
@@ -124,20 +129,20 @@ public class FieldOfView : NetworkBehaviour
                 //If one of the casts hit something and the other didn't *or* if both hit, but likely hit different things
                 if (oldViewCast.hit != newViewCast.hit || (oldViewCast.hit && newViewCast.hit && edgeDistExceeded)) 
                 {
-                    ///Debug.DrawLine(transform.position, oldViewCast.point, Color.red);
-                    //Debug.DrawLine(transform.position, newViewCast.point, Color.red);
+                    //Debug.DrawLine(foVAnchor.position, oldViewCast.point, Color.red);
+                    //Debug.DrawLine(foVAnchor.position, newViewCast.point, Color.red);
 
                     EdgeInfo edge = FindEdge(oldViewCast, newViewCast);
                     if(edge.pointA != Vector3.zero)
                     {
                         viewPoints.Add(edge.pointA);
-                        //Debug.DrawLine(transform.position, edge.pointA, Color.green);
+                        //Debug.DrawLine(foVAnchor.position, edge.pointA, Color.green);
 
                     }
                     if (edge.pointB != Vector3.zero)
                     {
                         viewPoints.Add(edge.pointB);
-                        //Debug.DrawLine(transform.position, edge.pointB, Color.green);
+                        //Debug.DrawLine(foVAnchor.position, edge.pointB, Color.green);
                     }
                 }
             }
@@ -162,8 +167,8 @@ public class FieldOfView : NetworkBehaviour
 
         for(int i = 0; i < vertexCount - 1; i++)
         {
-            vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i] + Vector3.forward * obstaclePeekDist);
-            //Debug.DrawLine(transform.position, viewPoints[i], Color.red);
+            vertices[i + 1] = foVAnchor.InverseTransformPoint(viewPoints[i] + Vector3.forward * obstaclePeekDist);
+            //Debug.DrawLine(foVAnchor.position, viewPoints[i], Color.red);
 
             if ( i < vertexCount - 2)
             {
@@ -194,15 +199,15 @@ public class FieldOfView : NetworkBehaviour
         Vector3 minPoint = minViewCast.point;
         Vector3 maxPoint = maxViewCast.point;
 
-        //Debug.DrawLine(transform.position, minViewCast.point, Color.green);
-        //Debug.DrawLine(transform.position, maxViewCast.point, Color.green);
+        //Debug.DrawLine(foVAnchor.position, minViewCast.point, Color.green);
+        //Debug.DrawLine(foVAnchor.position, maxViewCast.point, Color.green);
 
         for (int i = 0; i < edgeResolveIterations; i++)
         {
             float angle = (minAngle + maxAngle) / 2;
             ViewCastInfo newViewCast = ViewCast(angle); //A view cast going at the middle point
 
-            //Debug.DrawLine(transform.position, newViewCast.point, Color.red);
+            //Debug.DrawLine(foVAnchor.position, newViewCast.point, Color.red);
 
             bool edgeDistExceeded = Mathf.Abs(minViewCast.dist - newViewCast.dist) > edgeDistanceThreshold;
 
@@ -226,13 +231,13 @@ public class FieldOfView : NetworkBehaviour
         Vector3 dir = DirFromAngle(globalAngle, true);
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, dir, out hit, viewRadius, obstacleMask))
+        if (Physics.Raycast(foVAnchor.position, dir, out hit, viewRadius, obstacleMask))
         {
             return new ViewCastInfo(true, hit.point, hit.distance, globalAngle);
         }
         else
         {
-            return new ViewCastInfo(false, transform.position + dir * viewRadius, viewRadius, globalAngle);
+            return new ViewCastInfo(false, foVAnchor.position + dir * viewRadius, viewRadius, globalAngle);
         }
     }
 
@@ -241,7 +246,7 @@ public class FieldOfView : NetworkBehaviour
     {
         if (!angleIsGlobal)
         {
-            angleInDegrees += transform.eulerAngles.y;
+            angleInDegrees += foVAnchor.eulerAngles.y;
         }
 
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
