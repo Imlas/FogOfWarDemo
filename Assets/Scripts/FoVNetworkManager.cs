@@ -17,14 +17,15 @@ public class FoVNetworkManager : NetworkManager
         base.OnServerAddPlayer(conn);
 
         DudeController player = conn.identity.gameObject.GetComponent<DudeController>();
+
+
+        BaddieManager.Instance.AddPlayer(player.gameObject);
         Debug.Log($"New player spawned at {player.gameObject.transform.position}");
 
         //Add them to the list of players (for baddie purposes?)
 
         //Start spawning baddies
         //Put this in another manager?
-        //ball = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "Ball"));
-        //NetworkServer.Spawn(ball);
 
 
 

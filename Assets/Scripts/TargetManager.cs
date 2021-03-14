@@ -8,9 +8,10 @@ public class TargetManager : MonoBehaviour
 
     public static TargetManager Instance { get { return _instance; } }
 
-    private List<GameObject> targets;
+    [SerializeField] private List<GameObject> targets;
 
     public string targetTag;
+
 
     private void Awake()
     {
@@ -50,6 +51,7 @@ public class TargetManager : MonoBehaviour
         GameObject[] targetArray;
         targetArray = GameObject.FindGameObjectsWithTag(targetTag);
         targets = new List<GameObject>(targetArray);
+        Debug.Log($"{targets.Count} game objects found with the {targetTag} tag");
     }
 
 }
