@@ -8,47 +8,51 @@ public class BaddieSpawner : NetworkBehaviour
     //BaddieSpawner is an entirely server-based/controlled entity. Clients should not interract with it at all
     [SerializeField] private GameObject baddieProto;
     [SerializeField] private Transform spawnTransform;
+    [SerializeField] private float timeBetweenSpawns;
+    private float timeOfLastSpawn;
+
+    public bool isSpawningBaddies = true;
 
     public override void OnStartServer()
     {
         base.OnStartServer();
 
         //Debug.Log("OnStartServer called for baddie spawner.");
-        StartCoroutine(nameof(SpawnBaddiesConstantly), 2f);
+        //StartCoroutine(nameof(SpawnBaddiesConstantly), 2f);
+        timeOfLastSpawn = Time.time;
+
+        //For testing, spawn one immediately
+        SpawnBaddie();
 
     }
 
-    IEnumerator SpawnBaddiesConstantly(float delay)
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(delay);
-            SpawnBaddie();
-        }
-    }
+    //IEnumerator SpawnBaddiesConstantly(float delay)
+    //{
+    //    while (true)
+    //    {
+    //        yield return new WaitForSeconds(delay);
+    //        SpawnBaddie();
+    //    }
+    //}
 
     private void SpawnBaddie()
     {
-        Debug.Log("Spawn!");
-        GameObject newBaddie = Instantiate(baddieProto, spawnTransform);
+        //Debug.Log("Spawn!");
+        GameObject newBaddie = Instantiate(baddieProto, spawnTransform.position, Quaternion.identity);
         NetworkServer.Spawn(newBaddie);
 
         BaddieManager.Instance.AddBaddie(newBaddie);
 
+        timeOfLastSpawn = Time.time;
     }
 
 
-
-
-    //// Start is called before the first frame update
-    //void Start()
-    //{
-
-    //}
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
+    [ServerCallback]
+    void Update()
+    {
+        if(Time.time >= timeOfLastSpawn + timeBetweenSpawns && isSpawningBaddies)
+        {
+            SpawnBaddie();
+        }
+    }
 }

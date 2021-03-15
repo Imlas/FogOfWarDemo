@@ -167,9 +167,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  attackDistance: 1.5
+  attackRange: 2
   stopDistance: 1
   reSeekDelay: 0.5
+  maxFireAngleDifference: 15
+  attackCooldown: 2
 --- !u!114 &7291375968447318364
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -66,9 +66,9 @@ public class DudeController : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
 
-        velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
+        velocity = new Vector3(Input.GetAxisRaw("Horizontal"), rb.velocity.y, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
 
-        rb.MovePosition(transform.position + velocity * Time.deltaTime);
-        //rb.velocity = this.velocity;
+        //rb.MovePosition(transform.position + velocity * Time.deltaTime);
+        rb.velocity = this.velocity;
     }
 }
