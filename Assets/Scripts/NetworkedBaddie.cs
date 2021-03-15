@@ -6,6 +6,12 @@ using UnityEngine.AI;
 
 public class NetworkedBaddie : NetworkBehaviour
 {
+    //Basic loop (for now - later this will just be one of several "ai types")
+    // baddie spawns, finds nearest player, sets player current position as nav destination
+    // every *reSeekDelay* seconds, will update player's position as destination
+    //  stop the update when distance to player < stop distance (which should be smaller than attack distance)
+    //  cycle through attacking player, then check if in-distance, move if needed and repeat
+    //  if, on attack, the player is gone (dead), then find another target?
 
     //NetworkedBaddie is an entirely server-based/controlled entity. Clients should not interract with it at all
     //So it turns out that this doens't become active until the server starts
@@ -27,7 +33,8 @@ public class NetworkedBaddie : NetworkBehaviour
 
         //Find the player, set navagent destination
         currentTarget = findNearestPlayer();
-        SeekTarget(); //We'll need a way to do this regularly (every ~1s?) to account for the player moving
+        SeekTarget();
+        StartCoroutine(nameof(ReSeekTarget), reSeekDelay);
 
     }
 
@@ -60,8 +67,25 @@ public class NetworkedBaddie : NetworkBehaviour
             yield return new WaitForSeconds(delay);
             SeekTarget();
         }
+
+        AttackTarget();
     }
 
+    IEnumerator SimpleDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+    }
+
+    private void AttackTarget()
+    {
+        Debug.Log("Attack!");
+        //Do the attack
+        //Delay for some time (half of attack c/d?)
+        //StartCoroutine(nameof(SimpleDelay), 1f);
+        //Check if target is dead, if yes then find new target
+        //Check if in range, if not then path to target
+        //AttackTarget();
+    }
 
     // Update is called once per frame
     [ServerCallback]

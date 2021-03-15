@@ -147,7 +147,7 @@ NavMeshAgent:
   m_AngularSpeed: 180
   m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 0
@@ -167,6 +167,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  attackDistance: 1.5
+  stopDistance: 1
+  reSeekDelay: 0.5
 --- !u!114 &7291375968447318364
 MonoBehaviour:
   m_ObjectHideFlags: 0
