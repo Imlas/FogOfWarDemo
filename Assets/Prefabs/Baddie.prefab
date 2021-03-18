@@ -111,6 +111,8 @@ GameObject:
   - component: {fileID: 5760763625613468681}
   - component: {fileID: 7645013394456624079}
   - component: {fileID: -403487086572262541}
+  - component: {fileID: -7785897068128146508}
+  - component: {fileID: -2311657214888951181}
   m_Layer: 11
   m_Name: Baddie
   m_TagString: Target
@@ -222,7 +224,7 @@ MonoBehaviour:
   reachedEndOfPath: 0
   targetGO: {fileID: 0}
   speed: 5
-  nextWaypointMinDistance: 0.5
+  nextWaypointMinDistance: 0.25
   rePathRate: 0.5
 --- !u!114 &7645013394456624079
 MonoBehaviour:
@@ -275,3 +277,40 @@ MonoBehaviour:
   raycastOffset: {x: 0, y: 0, z: 0}
   useGraphRaycasting: 0
   quality: 1
+--- !u!114 &-7785897068128146508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7291375968447318362}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb6a34d769a1e4ac7b0b30e433aa443c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  smoothType: 0
+  subdivisions: 2
+  iterations: 2
+  strength: 0.5
+  uniformLength: 1
+  maxSegmentLength: 2
+  bezierTangentLength: 0.4
+  offset: 0.2
+  factor: 0.1
+--- !u!114 &-2311657214888951181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7291375968447318362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a537d958aa5bb4f35b0d7b40d72278f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  penalty: 5000
+  randomStep: 10

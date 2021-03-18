@@ -25,8 +25,8 @@ public class NetworkedBaddie : NetworkBehaviour
     [SerializeField] private float attackRange;
     [SerializeField] private float stopDistance; //stop distance should be smaller than attackDistance
 
-    [SerializeField] private float reSeekDelay; //time in seconds between having the navAgent recalc a path to new destination
-    private float timeOfLastReSeek;
+    //[SerializeField] private float reSeekDelay; //time in seconds between having the navAgent recalc a path to new destination
+    //private float timeOfLastReSeek;
 
     [SerializeField] private float maxFireAngleDifference;
     [SerializeField] private float attackCooldown; //time in seconds in between attacks
@@ -43,7 +43,7 @@ public class NetworkedBaddie : NetworkBehaviour
         baddiePathfinder = GetComponent<BaddiePathfinder>();
 
         timeOfLastAttack = Time.time;
-        timeOfLastReSeek = 0f; //In this case, we want a unit to be able to seek instantly upon creation, but not attack
+        //timeOfLastReSeek = 0f; //In this case, we want a unit to be able to seek instantly upon creation, but not attack
 
 
     }
@@ -91,14 +91,14 @@ public class NetworkedBaddie : NetworkBehaviour
         return Time.time >= timeOfLastAttack + attackCooldown;
     }
 
-    /// <summary>
-    /// Checks if the current time is later than the last time we checked for pathfinding plus delay
-    /// </summary>
-    /// <returns></returns>
-    private bool IsReSeekOffCooldown()
-    {
-        return Time.time >= timeOfLastReSeek + reSeekDelay;
-    }
+    ///// <summary>
+    ///// Checks if the current time is later than the last time we checked for pathfinding plus delay
+    ///// </summary>
+    ///// <returns></returns>
+    //private bool IsReSeekOffCooldown()
+    //{
+    //    return Time.time >= timeOfLastReSeek + reSeekDelay;
+    //}
 
     /// <summary>
     /// NOT YET IMPLEMENTED

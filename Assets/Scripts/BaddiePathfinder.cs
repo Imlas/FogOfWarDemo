@@ -31,6 +31,11 @@ public class BaddiePathfinder : NetworkBehaviour
     [Server]
     public void StartPathTo(GameObject _targetGO)
     {
+        if(_targetGO == targetGO && !seeker.IsDone())
+        {
+            return; //In this case, the target hasn't changed, and we're still looking for a path, so chill out for a tick
+        }
+
         targetGO = _targetGO;
         seeker.StartPath(this.transform.position, targetGO.transform.position, OnPathComplete);
     }
@@ -55,7 +60,7 @@ public class BaddiePathfinder : NetworkBehaviour
             return;
         }
 
-
+        //If enough time has passed, get a new path
         if(Time.time > (lastRepath + rePathRate) && seeker.IsDone())
         {
             lastRepath = Time.time;
@@ -104,7 +109,7 @@ public class BaddiePathfinder : NetworkBehaviour
         Vector3 dir = (path.vectorPath[currentWaypoint] - this.transform.position).normalized;
 
         Vector3 velocity = dir * speed;
-        Debug.Log($"Pos: {this.transform.position}, Point:{path.vectorPath[currentWaypoint]} {currentWaypoint}");
+        //Debug.Log($"Pos: {this.transform.position}, Point:{path.vectorPath[currentWaypoint]} {currentWaypoint}");
         //Also need to set the rotation somewhere
 
         rb.velocity = velocity; //This should 100% get worked into a fixed update or some shit
