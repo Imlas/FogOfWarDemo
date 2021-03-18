@@ -2,7 +2,7 @@ using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
+//using UnityEngine.AI;
 
 public class NetworkedBaddie : NetworkBehaviour
 {
@@ -14,8 +14,9 @@ public class NetworkedBaddie : NetworkBehaviour
 
     //NetworkedBaddie is an entirely server-based/controlled entity. Clients should not interract with it at all
     //So it turns out that this doens't become active until the server starts
-    NavMeshAgent navAgent;
+    //NavMeshAgent navAgent;
     GameObject currentTarget;
+    BaddiePathfinder baddiePathfinder;
 
     //For now, neither of these are used. Currently moveSpeed and turnRate are implemented directly into the navAgent component
     [SerializeField] private float moveSpeed;
@@ -38,7 +39,8 @@ public class NetworkedBaddie : NetworkBehaviour
         base.OnStartServer();
 
         //Grab components as needed
-        navAgent = GetComponent<NavMeshAgent>();
+        //navAgent = GetComponent<NavMeshAgent>();
+        baddiePathfinder = GetComponent<BaddiePathfinder>();
 
         timeOfLastAttack = Time.time;
         timeOfLastReSeek = 0f; //In this case, we want a unit to be able to seek instantly upon creation, but not attack
@@ -130,17 +132,22 @@ public class NetworkedBaddie : NetworkBehaviour
 
     public void ReSeekTarget()
     {
-        //Recalcs a path to the current target
-        //For now just sets the NavAgent destination and lets it handle everything
-        if (navAgent.pathPending || currentTarget == null)
+        ////Recalcs a path to the current target
+        ////For now just sets the NavAgent destination and lets it handle everything
+        //if (navAgent.pathPending || currentTarget == null)
+        //{
+        //    return;
+        //}
+
+        //navAgent.SetDestination(new Vector3(currentTarget.transform.position.x, 0, currentTarget.transform.position.z));
+
+        //timeOfLastReSeek = Time.time;
+        ////Debug.Log($"Reseek to position {currentTarget.transform.position} at time {Time.time}");
+        if(currentTarget == null)
         {
             return;
         }
-
-        navAgent.SetDestination(new Vector3(currentTarget.transform.position.x, 0, currentTarget.transform.position.z));
-
-        timeOfLastReSeek = Time.time;
-        //Debug.Log($"Reseek to position {currentTarget.transform.position} at time {Time.time}");
+        baddiePathfinder.StartPathTo(currentTarget);
     }
 
     private void MoveToTarget()
@@ -181,7 +188,7 @@ public class NetworkedBaddie : NetworkBehaviour
             ReSeekTarget();
         }
 
-        MoveToTarget();
+        //MoveToTarget();
     }
 
     [ServerCallback]
@@ -191,18 +198,18 @@ public class NetworkedBaddie : NetworkBehaviour
 
     }
 
-    [ContextMenu(("Send Path to Debug"))]
-    private void PathToDebug()
-    {
-        if(navAgent == null)
-        {
-            Debug.Log("agent is somehow null. idk");
-            return;
-        }
-        Debug.Log($"Agent has a path? {navAgent.hasPath}. End point is: {navAgent.pathEndPosition}.");
-        foreach( Vector3 point in navAgent.path.corners){
-            Debug.Log($"Point: {point}");
-        }
-    }
+    //[ContextMenu(("Send Path to Debug"))]
+    //private void PathToDebug()
+    //{
+    //    if(navAgent == null)
+    //    {
+    //        Debug.Log("agent is somehow null. idk");
+    //        return;
+    //    }
+    //    Debug.Log($"Agent has a path? {navAgent.hasPath}. End point is: {navAgent.pathEndPosition}.");
+    //    foreach( Vector3 point in navAgent.path.corners){
+    //        Debug.Log($"Point: {point}");
+    //    }
+    //}
 
 }
