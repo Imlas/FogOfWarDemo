@@ -153,7 +153,6 @@ MonoBehaviour:
   turnRate: 0
   attackRange: 2
   stopDistance: 1
-  reSeekDelay: 0.5
   maxFireAngleDifference: 15
   attackCooldown: 2
 --- !u!114 &7291375968447318364
@@ -223,7 +222,7 @@ MonoBehaviour:
   syncInterval: 0.1
   reachedEndOfPath: 0
   targetGO: {fileID: 0}
-  speed: 5
+  speed: 4
   nextWaypointMinDistance: 0.25
   rePathRate: 0.5
 --- !u!114 &7645013394456624079

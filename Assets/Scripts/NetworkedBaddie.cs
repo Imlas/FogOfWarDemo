@@ -119,7 +119,7 @@ public class NetworkedBaddie : NetworkBehaviour
 
     private void AttackTarget()
     {
-        Debug.Log($"Attack! at {Time.time}");
+        //Debug.Log($"Attack! at {Time.time}");
         //Instantiate projectile, play attack animation of present, play sound effect
         timeOfLastAttack = Time.time;
     }

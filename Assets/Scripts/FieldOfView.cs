@@ -49,7 +49,7 @@ public class FieldOfView : NetworkBehaviour
         viewMeshFilterPrimary.mesh = viewMesh;
         //viewMeshFilterSecondary.mesh = viewMesh;
 
-        StartCoroutine("FindTargetsWithDelay", 0.2f);
+        StartCoroutine(nameof(FindTargetsWithDelay), 0.2f);
     }
 
     IEnumerator FindTargetsWithDelay(float delay)
@@ -76,6 +76,8 @@ public class FieldOfView : NetworkBehaviour
 
         Collider[] targetsInViewRadius = Physics.OverlapSphere(foVAnchor.position, viewRadius + targetPeekDist, targetMask); //All targets within the view distance
 
+        Debug.Log($"{targetsInViewRadius.Length} targets in collider range.");
+
         for (int i = 0; i < targetsInViewRadius.Length; i++)
         {
             Transform target = targetsInViewRadius[i].transform;
@@ -101,10 +103,12 @@ public class FieldOfView : NetworkBehaviour
 
     void ToggleVisibilityOfTargets()
     {
+        Debug.Log("Toggle Ping");
+
         //Will first get a list of all targets and switch them to an "invisible" layer
-        foreach(GameObject target in TargetManager.Instance.GetTargets())
+        foreach(GameObject baddie in BaddieManager.Instance.getBaddies())
         {
-            target.layer = invisTargetLayer;
+            baddie.layer = invisTargetLayer;
         }
 
         //Then will switch the layer of all visible targets to visible
