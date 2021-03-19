@@ -74,19 +74,26 @@ public class FieldOfView : NetworkBehaviour
     {
         visibleTargets.Clear();
 
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(foVAnchor.position, viewRadius + targetPeekDist, targetMask); //All targets within the view distance
+        //Debug.Log($"Casting sphere from center: {foVAnchor.position} of radius {viewRadius + targetPeekDist}");
 
-        Debug.Log($"{targetsInViewRadius.Length} targets in collider range.");
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(foVAnchor.position, viewRadius + targetPeekDist, targetMask); //All targets within the view distance
+        ///Collider[] targetsInViewRadius = Physics.OverlapSphere(foVAnchor.position, viewRadius + targetPeekDist); //All targets within the view distance
+
+
+        //Debug.Log($"{targetsInViewRadius.Length} targets in collider range");
 
         for (int i = 0; i < targetsInViewRadius.Length; i++)
         {
             Transform target = targetsInViewRadius[i].transform;
 
-            Vector3 dirToTarget = (target.position - foVAnchor.position).normalized;
+            //Since the FoV mesh doesn't take into account "short" LoS blockers, we don't want those impacting target visibility
+            Vector3 adjPosition = new Vector3(target.position.x, foVAnchor.position.y, target.position.z);
+
+            Vector3 dirToTarget = (adjPosition - foVAnchor.position).normalized;
             if(Vector3.Angle(foVAnchor.forward, dirToTarget) < viewAngle / 2)
             {
                 //The target is within the view angle
-                float distToTarget = Vector3.Distance(foVAnchor.position, target.position);
+                float distToTarget = Vector3.Distance(foVAnchor.position, adjPosition);
 
                 if(!Physics.Raycast(foVAnchor.position, dirToTarget, distToTarget, obstacleMask))
                 {
@@ -103,18 +110,31 @@ public class FieldOfView : NetworkBehaviour
 
     void ToggleVisibilityOfTargets()
     {
-        Debug.Log("Toggle Ping");
+        //Debug.Log("Toggle Ping");
 
         //Will first get a list of all targets and switch them to an "invisible" layer
         foreach(GameObject baddie in BaddieManager.Instance.getBaddies())
         {
-            baddie.layer = invisTargetLayer;
+            SetLayerOnAll(baddie, invisTargetLayer);
         }
 
         //Then will switch the layer of all visible targets to visible
         foreach(GameObject target in visibleTargets)
         {
-            target.layer = visTargetLayer;
+            SetLayerOnAll(target, visTargetLayer);
+        }
+    }
+
+    /// <summary>
+    /// /Will set the layer for a gameobject and all of its children/grandchilden to the given layer number
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <param name="layer"></param>
+    void SetLayerOnAll(GameObject obj, int layer)
+    {
+        foreach(Transform trans in obj.GetComponentsInChildren<Transform>(true))
+        {
+            trans.gameObject.layer = layer;
         }
     }
 

@@ -35,6 +35,7 @@ public class BaddieSpawner : NetworkBehaviour
     //    }
     //}
 
+    [Server]
     private void SpawnBaddie()
     {
         //Debug.Log("Spawn!");
@@ -54,5 +55,16 @@ public class BaddieSpawner : NetworkBehaviour
         {
             SpawnBaddie();
         }
+    }
+
+    [ContextMenu(("Spawn New Baddie"))]
+    private void EditorSpawnBaddie()
+    {
+        if(baddieProto == null)
+        {
+            return;
+        }
+
+        SpawnBaddie();
     }
 }
