@@ -28,6 +28,8 @@ public class BaddieManager : NetworkBehaviour
         else
         {
             _instance = this;
+            baddies.Clear();
+            players.Clear();
         }
     }
 

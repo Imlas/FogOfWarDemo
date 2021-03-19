@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1908461315920729402}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Gfx
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: 2700563352070716213}
   - component: {fileID: 7864231426426681297}
   - component: {fileID: 6844198278249043448}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Dude
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -187,7 +187,7 @@ GameObject:
   - component: {fileID: 1908461316279029049}
   - component: {fileID: 1908461316279029048}
   - component: {fileID: 1908461316279029051}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 1908461316911880471}
   - component: {fileID: 1908461316911880470}
   - component: {fileID: 1908461316911880465}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: LArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -378,7 +378,7 @@ GameObject:
   - component: {fileID: 1908461317137115250}
   - component: {fileID: 1908461317137115277}
   - component: {fileID: 1908461317137115276}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: RArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -668,7 +668,7 @@ GameObject:
   - component: {fileID: 4005824420702117832}
   - component: {fileID: 1962867368120187746}
   - component: {fileID: 3602500408166209632}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

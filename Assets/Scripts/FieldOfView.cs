@@ -104,7 +104,7 @@ public class FieldOfView : NetworkBehaviour
 
         }
 
-        ToggleVisibilityOfTargets();
+        //ToggleVisibilityOfTargets();
 
     }
 
@@ -132,6 +132,7 @@ public class FieldOfView : NetworkBehaviour
     /// <param name="layer"></param>
     void SetLayerOnAll(GameObject obj, int layer)
     {
+        if (obj == null) return;
         foreach(Transform trans in obj.GetComponentsInChildren<Transform>(true))
         {
             trans.gameObject.layer = layer;
