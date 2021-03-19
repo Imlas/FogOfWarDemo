@@ -19,6 +19,8 @@ public class BaddiePathfinder : NetworkBehaviour
     [SerializeField] float nextWaypointMinDistance = 0.5f;
     [SerializeField] float rePathRate = 0.5f;
     float lastRepath = Mathf.NegativeInfinity;
+
+    private Vector3 currentVelocity;
     
 
     // Start is called before the first frame update
@@ -108,11 +110,20 @@ public class BaddiePathfinder : NetworkBehaviour
 
         Vector3 dir = (path.vectorPath[currentWaypoint] - this.transform.position).normalized;
 
-        Vector3 velocity = dir * speed;
+        currentVelocity = dir * speed;
         //Debug.Log($"Pos: {this.transform.position}, Point:{path.vectorPath[currentWaypoint]} {currentWaypoint}");
         //Also need to set the rotation somewhere
 
-        rb.velocity = velocity; //This should 100% get worked into a fixed update or some shit
+        //rb.velocity = velocity; //This should 100% get worked into a fixed update or some shit
+
+    }
+
+    [ServerCallback]
+
+    private void FixedUpdate()
+    {
+        rb.velocity = currentVelocity;
+        //rb.MovePosition(transform.position + currentVelocity * Time.deltaTime);
 
     }
 }
