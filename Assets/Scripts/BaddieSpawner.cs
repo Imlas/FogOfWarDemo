@@ -10,6 +10,7 @@ public class BaddieSpawner : NetworkBehaviour
     [SerializeField] private Transform spawnTransform;
     [SerializeField] private float timeBetweenSpawns;
     private float timeOfLastSpawn;
+    [SerializeField] private int maxBaddies;
 
     public bool isSpawningBaddies = true;
 
@@ -51,7 +52,7 @@ public class BaddieSpawner : NetworkBehaviour
     [ServerCallback]
     void Update()
     {
-        if(Time.time >= timeOfLastSpawn + timeBetweenSpawns && isSpawningBaddies)
+        if(maxBaddies > BaddieManager.Instance.getBaddies().Count && Time.time >= timeOfLastSpawn + timeBetweenSpawns && isSpawningBaddies)
         {
             SpawnBaddie();
         }

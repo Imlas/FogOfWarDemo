@@ -173,6 +173,7 @@ public class NetworkedBaddie : NetworkBehaviour
         if(currentTarget == null)
         {
             currentTarget = FindNearestPlayer(); //Eventually baddies should be able to target player structures/etc, not just players themselves
+            //ReSeekTarget();
         }
 
         if(IsAttackOffCooldown() && IsInRange() && IsFacingTarget())
@@ -181,7 +182,7 @@ public class NetworkedBaddie : NetworkBehaviour
         }
         else if(IsInRange() && !IsFacingTarget())
         {
-            TurnToTarget();
+            //TurnToTarget();
         }
         else if (!IsInRange())
         {

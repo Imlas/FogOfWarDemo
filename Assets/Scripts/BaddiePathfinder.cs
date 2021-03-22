@@ -21,6 +21,7 @@ public class BaddiePathfinder : NetworkBehaviour
     float lastRepath = Mathf.NegativeInfinity;
 
     private Vector3 currentVelocity;
+    //[SerializeField] private int repathCount = 0;
     
 
     // Start is called before the first frame update
@@ -28,11 +29,19 @@ public class BaddiePathfinder : NetworkBehaviour
     {
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody>();
+
+        //repathCount = 0;
     }
 
     [Server]
     public void StartPathTo(GameObject _targetGO)
     {
+        if(Time.time < (lastRepath + rePathRate))
+        {
+            return;
+        }
+
+
         if(_targetGO == targetGO && !seeker.IsDone())
         {
             return; //In this case, the target hasn't changed, and we're still looking for a path, so chill out for a tick
@@ -40,6 +49,9 @@ public class BaddiePathfinder : NetworkBehaviour
 
         targetGO = _targetGO;
         seeker.StartPath(this.transform.position, targetGO.transform.position, OnPathComplete);
+        lastRepath = Time.time;
+
+        //repathCount++;
     }
 
     [Server]
@@ -65,6 +77,7 @@ public class BaddiePathfinder : NetworkBehaviour
         //If enough time has passed, get a new path
         if(Time.time > (lastRepath + rePathRate) && seeker.IsDone())
         {
+            //Debug.Log($"Last Repath Time {lastRepath}. Current Time: {Time.time}");
             lastRepath = Time.time;
             StartPathTo(targetGO);
         }
@@ -76,7 +89,7 @@ public class BaddiePathfinder : NetworkBehaviour
             return;
         }
 
-        reachedEndOfPath = false;
+        //reachedEndOfPath = false;
 
         float distanceSqrToNextPoint;
         while (true)
@@ -98,7 +111,7 @@ public class BaddiePathfinder : NetworkBehaviour
                 else
                 {
 
-                    reachedEndOfPath = true;
+                    //reachedEndOfPath = true;
                     break;
                 }
             }
