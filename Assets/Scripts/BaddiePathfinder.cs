@@ -15,10 +15,13 @@ public class BaddiePathfinder : NetworkBehaviour
 
     [SerializeField] GameObject targetGO;
 
+    [SerializeField] LayerMask LoSBlockerMask;
     [SerializeField] float speed = 5.5f;
     [SerializeField] float nextWaypointMinDistance = 0.5f;
     [SerializeField] float rePathRate = 0.5f;
     float lastRepath = Mathf.NegativeInfinity;
+
+    [SerializeField] float finalStopDistance = 3f;
 
     private Vector3 currentVelocity;
     //[SerializeField] private int repathCount = 0;
@@ -66,15 +69,15 @@ public class BaddiePathfinder : NetworkBehaviour
     }
 
     [ServerCallback]
-    // Update is called once per frame
     void Update()
     {
+        //If we don't have a target, then just exit out
         if(targetGO == null)
         {
             return;
         }
 
-        //If enough time has passed, get a new path
+        //If enough time has passed, and we aren't still getting a new path, get a new path
         if(Time.time > (lastRepath + rePathRate) && seeker.IsDone())
         {
             //Debug.Log($"Last Repath Time {lastRepath}. Current Time: {Time.time}");
@@ -82,57 +85,58 @@ public class BaddiePathfinder : NetworkBehaviour
             StartPathTo(targetGO);
         }
 
-
-        //If we don't have a path, just exit out
-        if (path == null)
+        //If we don't have a path (either still getting one, or we've reached the end, then exit out
+        if(path == null)
         {
             return;
         }
 
-        //reachedEndOfPath = false;
-
-        float distanceSqrToNextPoint;
-        while (true)
+        //Check if we're close enough to the final point and then within LoS of it. If so then just chill.
+        Vector3 nonYTarget = new Vector3(targetGO.transform.position.x - this.transform.position.x, 0, targetGO.transform.position.z - this.transform.position.z);
+        if(nonYTarget.sqrMagnitude < finalStopDistance * finalStopDistance) //Doing a cheaper non-sqroot check
         {
-            //We want to find the difference in distance, discarding the y axis
-            Vector3 nonYDiff = new Vector3(this.transform.position.x - path.vectorPath[currentWaypoint].x, this.transform.position.z - path.vectorPath[currentWaypoint].z); //
-
-            distanceSqrToNextPoint = nonYDiff.sqrMagnitude;
-
-            ///Debug.Log($"SqrDist {distanceSqrToNextPoint}  MinDistSqr: {nextWaypointMinDistance * nextWaypointMinDistance}");
-
-            if((nextWaypointMinDistance * nextWaypointMinDistance) >= distanceSqrToNextPoint)
+            if(!Physics.Raycast(this.transform.position, nonYTarget, nonYTarget.magnitude, LoSBlockerMask))
             {
-                //Check if there's another waypoint still
-                if(currentWaypoint + 1 < path.vectorPath.Count)
-                {
-                    currentWaypoint++;
-                }
-                else
-                {
-
-                    //reachedEndOfPath = true;
-                    break;
-                }
-            }
-            else
-            {
-                break;
+                //In this case we're "close enough" to the target, and nothing (on LoSBlocker) is blocking us, so we're done moving this frame.
+                Debug.Log($"I'm close enough to my target.");
+                currentVelocity = Vector3.zero; //We could modify this later to coast to a stop a bit
+                path = null;
+                return;
             }
         }
 
+        //Next, see if we're close enough to the next point, if so then increment the currentWaypoint
+        //An improvement for this would be to place this in a seperate method, then call it again at the end to see if we can skip over multiple waypoints at once
+        Vector3 nonYDiff = new Vector3(this.transform.position.x - path.vectorPath[currentWaypoint].x, this.transform.position.z - path.vectorPath[currentWaypoint].z); //
+        if(nonYDiff.sqrMagnitude <= nextWaypointMinDistance * nextWaypointMinDistance)
+        {
+            //Check if there's more waypoints, if so then ++
+            if(currentWaypoint + 1 < path.vectorPath.Count)
+            {
+                
+                currentWaypoint++;
+            }
+            else
+            {
+                Debug.Log($"Reached the *end* of the path. Target is at: {targetGO.transform.position}. I am at: {this.transform.position}");
+                currentVelocity = Vector3.zero;
+                path = null;
+                return;
+                //Maybe some reachedEndOfPath callback here if needed, for now we'll just null the path
+            }
+        }
+
+        //So now we just need to move towards the currentWaypoint
         Vector3 dir = (path.vectorPath[currentWaypoint] - this.transform.position).normalized;
 
         currentVelocity = dir * speed;
         //Debug.Log($"Pos: {this.transform.position}, Point:{path.vectorPath[currentWaypoint]} {currentWaypoint}");
         //Also need to set the rotation somewhere
 
-        //rb.velocity = velocity; //This should 100% get worked into a fixed update or some shit
 
     }
 
     [ServerCallback]
-
     private void FixedUpdate()
     {
         rb.velocity = currentVelocity;

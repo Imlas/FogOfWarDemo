@@ -154,12 +154,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1
   data:
-    dataString: UEsDBBQAAAgIAACQn+t1Zt/qRAIAAPMEAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGFVEuP2jAQ/ivI57ZKELRLb21g2R5Y0NLVXnIx9oRYOHbkx/IS/71jJ5CUVdVTnJlvvvnmYZ+JULYG5rSZG8EXmgP5PiDhTD4NOucTHOhWq7U4wRXzJrgrA4hGzAt1QqM9DWFWV+CMYD/UVgZwgkavRKFNNeNbyLR1Fs0FlRbQZbQL0QpN5wE5tAHH9nsK38EFTwyUA/M/lFdM0qoGHtR24DS5wvEUgQoraTHJl3Hg11IK2woh7ljHQjNaW49lIIALioVFCUP8LUFsS9f+3IKXRWHBtbIMPU6Fwf40rOSnbppWUbtrtL1T6UOedPgQVTWki4/+ZDiKgMLo6umaOQ1JXCnY7oUeGbWu19a+edopT2OP9lTu6EbCWwnqWc+N9oqj0xkfQr2F4bRHdSsuK4HtOlwj9s7o648jSrsRXWL5h0yKahNbP2oMa6ljwychBgwO5xcKjothWya0BhGvFn7TbX+DWsejMNahq02ogrqN9iZAySy2LBTjXaaNAtNnqEFR6Y4r5HH3Q7zz/TvqkYbL0mZvfdc7cBcSzR0+Se5cK72/TcuWer8AWy69k0JB1+ngeMZGZVqpZsf6JV3D1t4UlPXCtl7wv5eLcDYZfoUhp2M2StL04fOE8mIzGTM2hm+TdFSQuHtCYZ1UrhqhbXtwbKojV7ho1zdkMDe0jvvODd3PxanStkMKVeg1MwBq2TDchIPBJHgz+YwLbNAanBMqDpyccyI12wHPb0R5rHR2cIbmHUtOavGuXbDkJIsvR04u5PIHUEsDBBQAAAgIAACQn+v+ZUIfbQAAAHgAAAAJACQAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0Bq1YqSy0qzszPU7JSMNEz0jM01VFQSi9KLMgoBooYgjilmSkgdrRSSrKlkVmqUUqiabKJgaGhha5lYkpakqVpcrJpqrmloUmaUixQfUllQapfYm4qRE9AYklGWmZeSmZeup57UWaKO8hopdhaAFBLAQItABQAAAgIAACQn+t1Zt/qRAIAAPMEAAALACQAAAAAAAAAAAAAAAAAAABncmFwaDAuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLAQItABQAAAgIAACQn+v+ZUIfbQAAAHgAAAAJACQAAAAAAAAAAAAAAJECAABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwUGAAAAAAIAAgC4AAAASQMAAAAA
+    dataString: UEsDBBQAAAgIAACQn+ttoQ4cQwIAAPMEAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGFVMuO2jAU/RXkdVslEbRDd21gmC4Y0NDRbLIx9g2xcOzIj+El/r3XTiCUUdVVnHvOPT73kZyIULYB5rSZGcHnmgP5PiDhTD4NevAJ9nSj1Uoc4cJ5E9xVgUQj54U6oTGehjSra3BGsB9qIwM5waBXotSmnvIN5No6i+GSSgsIGe1CtsLQaUD2XcKhex7Dc3DGEwPlwPyP5RWTtG6AB7c9OU0udDxFosJKOk7yZRT0tZTCdkaIOzSx0Jw21mMZSOCCYmHRQoavFYhN5bqXa/KiLC24zpahh4kw2J9WlfzUbdNqarett3cqfbgnzR6iq1Z0/hFPsmEklEbXT5ebg21XCbZ9oQdGrbvp6m140htPY4t2VG7pWsJbBepZz4z2iiPojA+p3kI2uZG61pZXwLY9r/V6F/TNxwml/YTOsfp9LkW9jp0ftoGV1LHf45ADBmfzCw3HvbCdEkaDiVcLv+nmdoE64FEY6xDqLlTB3Vp7E6hkGjsWivEu10aBuVVoQFHpDkvUcfczvMP+nfVIw7fS3d5hl0/gLiWGe36S3EFLvbtOy1Z6NwdbLbyTQt2KBeQZO5Vrpdods3doyFt5U1IG/YQ2XvC/l4twNs6+QsbpiA2TNH34PKa8XI9HjI3g2zgdliTunlBYKJXL1mnXH5yb6sUVbtrlHzKYGdrEfeeG7mbiWGvbM4Uq9YoZALVoFa7GweAl+GXyKRfYoRU4J1ScODkVRGq2BV5chYpY6XTvDC16lYI04l27EClIHv8cBTmT8x9QSwMEFAAACAgAAJCf6/5lQh9tAAAAeAAAAAkAJABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGrVipLLSrOzM9TslIw0TPSMzTVUVBKL0osyCgGihiCOKWZKSB2tFJKsqWRWapRSqJpsomBoaGFrmViSlqSpWlysmmquaWhSZpSLFB9SWVBql9ibipET0BiSUZaZl5KZl66nntRZoo7yGil2FoAUEsBAi0AFAAACAgAAJCf622hDhxDAgAA8wQAAAsAJAAAAAAAAAAAAAAAAAAAAGdyYXBoMC5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsBAi0AFAAACAgAAJCf6/5lQh9tAAAAeAAAAAkAJAAAAAAAAAAAAAAAkAIAAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLBQYAAAAAAgACALgAAABIAwAAAAA=
     upgradeData: 
     file_cachedStartup: {fileID: 0}
     data_cachedStartup: 
     cacheStartup: 0
-  showNavGraphs: 0
+  showNavGraphs: 1
   showUnwalkableNodes: 1
   debugMode: 0
   debugFloor: 0
@@ -253,7 +253,7 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5000001
-  m_Height: 2
+  m_Height: 3
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!23 &46036565
@@ -779,7 +779,7 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5000001
-  m_Height: 2
+  m_Height: 3
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!23 &343074196
@@ -1851,7 +1851,7 @@ MonoBehaviour:
   baddieProto: {fileID: 7291375968447318362, guid: 78e9a8caf7eaec14eae293876b6fd55f, type: 3}
   spawnTransform: {fileID: 2126846142}
   timeBetweenSpawns: 0.1
-  maxBaddies: 2
+  maxBaddies: 1
   isSpawningBaddies: 1
 --- !u!114 &1103996168
 MonoBehaviour:
@@ -2204,7 +2204,7 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5000001
-  m_Height: 2
+  m_Height: 3
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!23 &1507758439
@@ -2414,6 +2414,7 @@ GameObject:
   - component: {fileID: 1674851534}
   - component: {fileID: 1674851537}
   - component: {fileID: 1674851536}
+  - component: {fileID: 1674851538}
   - component: {fileID: 1674851535}
   m_Layer: 7
   m_Name: Cylinder (4)
@@ -2447,7 +2448,7 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5000001
-  m_Height: 2
+  m_Height: 3
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!23 &1674851536
@@ -2498,6 +2499,20 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1674851533}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!64 &1674851538
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674851533}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1683516718
 GameObject:
@@ -2759,7 +2774,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_RenderPostProcessing: 0
-  m_Antialiasing: 0
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0

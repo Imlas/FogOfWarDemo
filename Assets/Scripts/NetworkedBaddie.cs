@@ -25,6 +25,9 @@ public class NetworkedBaddie : NetworkBehaviour
     [SerializeField] private float attackRange;
     [SerializeField] private float stopDistance; //stop distance should be smaller than attackDistance
 
+    [SerializeField] private float lastTargetScan = Mathf.NegativeInfinity;
+    [SerializeField] private float targetScanDelay = 10f;
+
     //[SerializeField] private float reSeekDelay; //time in seconds between having the navAgent recalc a path to new destination
     //private float timeOfLastReSeek;
 
@@ -64,6 +67,8 @@ public class NetworkedBaddie : NetworkBehaviour
                 nearestPlayer = player;
             }
         }
+
+        lastTargetScan = Time.time;
 
         return nearestPlayer;
     }
@@ -170,7 +175,7 @@ public class NetworkedBaddie : NetworkBehaviour
     void Update()
     {
         //First, check if we have a target, if not then get the nearest player
-        if(currentTarget == null)
+        if(currentTarget == null || Time.time > lastTargetScan + targetScanDelay)
         {
             currentTarget = FindNearestPlayer(); //Eventually baddies should be able to target player structures/etc, not just players themselves
             //ReSeekTarget();
