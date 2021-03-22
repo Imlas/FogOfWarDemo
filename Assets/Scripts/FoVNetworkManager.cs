@@ -18,7 +18,7 @@ public class FoVNetworkManager : NetworkManager
 
         DudeController player = conn.identity.gameObject.GetComponent<DudeController>();
 
-
+        player.SetDisplayName($"Player {numPlayers}");
         BaddieManager.Instance.AddPlayer(player.gameObject);
         Debug.Log($"New player spawned at {player.gameObject.transform.position}");
 

@@ -39,13 +39,14 @@ public class BaddiePathfinder : NetworkBehaviour
     [Server]
     public void StartPathTo(GameObject _targetGO)
     {
-        if(Time.time < (lastRepath + rePathRate))
+        //If the target hasn't changed, and we still haven't waited long enough, then chill a bit
+        if(_targetGO == targetGO && Time.time < (lastRepath + rePathRate))
         {
             return;
         }
 
 
-        if(_targetGO == targetGO && !seeker.IsDone())
+        if(!seeker.IsDone())
         {
             return; //In this case, the target hasn't changed, and we're still looking for a path, so chill out for a tick
         }
@@ -98,7 +99,7 @@ public class BaddiePathfinder : NetworkBehaviour
             if(!Physics.Raycast(this.transform.position, nonYTarget, nonYTarget.magnitude, LoSBlockerMask))
             {
                 //In this case we're "close enough" to the target, and nothing (on LoSBlocker) is blocking us, so we're done moving this frame.
-                Debug.Log($"I'm close enough to my target.");
+                //Debug.Log($"I'm close enough to my target.");
                 currentVelocity = Vector3.zero; //We could modify this later to coast to a stop a bit
                 path = null;
                 return;
@@ -118,7 +119,7 @@ public class BaddiePathfinder : NetworkBehaviour
             }
             else
             {
-                Debug.Log($"Reached the *end* of the path. Target is at: {targetGO.transform.position}. I am at: {this.transform.position}");
+                //Debug.Log($"Reached the *end* of the path. Target is at: {targetGO.transform.position}. I am at: {this.transform.position}");
                 currentVelocity = Vector3.zero;
                 path = null;
                 return;

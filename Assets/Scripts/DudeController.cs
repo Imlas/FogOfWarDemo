@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class DudeController : NetworkBehaviour
 {
+    [SyncVar(hook = nameof(HandleDisplayNameUpdated))] [SerializeField] private string displayName = "Missing Name";
+
     private Cinemachine.CinemachineVirtualCamera virtCam;
     private Camera viewCamera;
 
@@ -70,5 +72,21 @@ public class DudeController : NetworkBehaviour
 
         //rb.MovePosition(transform.position + velocity * Time.deltaTime);
         rb.velocity = this.velocity;
+    }
+
+    [Server]
+    public void SetDisplayName(string newDisplayName)
+    {
+        displayName = newDisplayName;
+    }
+
+    private void HandleDisplayNameUpdated(string oldName, string newName)
+    {
+        //Doesn't do anthing for now.
+    }
+
+    public string GetDisplayName()
+    {
+        return displayName;
     }
 }

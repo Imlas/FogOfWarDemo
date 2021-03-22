@@ -15,6 +15,7 @@ public class NetworkedBaddie : NetworkBehaviour
     //NetworkedBaddie is an entirely server-based/controlled entity. Clients should not interract with it at all
     //So it turns out that this doens't become active until the server starts
     //NavMeshAgent navAgent;
+
     GameObject currentTarget;
     BaddiePathfinder baddiePathfinder;
 
@@ -60,16 +61,28 @@ public class NetworkedBaddie : NetworkBehaviour
         GameObject nearestPlayer = null;
 
         float dist2Closest = Mathf.Infinity;
+
+        //Debug.Log($"Finding the nearest player out of {BaddieManager.Instance.getPlayers().Count} options.");
+
         foreach(GameObject player in BaddieManager.Instance.getPlayers())
         {
-            if ((this.transform.position - player.transform.position).sqrMagnitude <= dist2Closest)
+            if ((player.transform.position - this.transform.position).sqrMagnitude <= dist2Closest)
             {
                 nearestPlayer = player;
+                dist2Closest = (player.transform.position - this.transform.position).sqrMagnitude;
             }
         }
 
         lastTargetScan = Time.time;
 
+        //if(nearestPlayer != null)
+        //{
+        //    nearestPlayer.TryGetComponent<DudeController>(out DudeController dudeCont);
+        //    if(dudeCont != null)
+        //    {
+        //        Debug.Log($"New nearest player is {dudeCont.GetDisplayName()}");
+        //    }
+        //}
         return nearestPlayer;
     }
 
