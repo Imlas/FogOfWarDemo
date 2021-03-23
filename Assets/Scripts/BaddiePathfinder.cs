@@ -17,6 +17,7 @@ public class BaddiePathfinder : NetworkBehaviour
 
     [SerializeField] LayerMask LoSBlockerMask;
     [SerializeField] float speed = 5.5f;
+    [SerializeField] float turnSpeed = 10f;
     [SerializeField] float nextWaypointMinDistance = 0.5f;
     [SerializeField] float rePathRate = 0.5f;
     float lastRepath = Mathf.NegativeInfinity;
@@ -69,6 +70,21 @@ public class BaddiePathfinder : NetworkBehaviour
         }
     }
 
+    [Server]
+    void RotateTowardsTarget()
+    {
+        var targetDir = targetGO.transform.position - this.transform.position;
+        var forward = this.transform.forward;
+        var localTarget = transform.InverseTransformPoint(targetGO.transform.position);
+
+        float angle = Mathf.Atan2(localTarget.x, localTarget.z) * Mathf.Rad2Deg;
+
+        Vector3 eulerAngleVecl = new Vector3(0f, angle, 0f);
+        Quaternion deltaRot = new Quaternion();
+        deltaRot = Quaternion.Euler(eulerAngleVecl);
+        rb.MoveRotation(rb.rotation * deltaRot);
+    }
+
     [ServerCallback]
     void Update()
     {
@@ -103,6 +119,7 @@ public class BaddiePathfinder : NetworkBehaviour
                 currentVelocity = Vector3.zero; //We could modify this later to coast to a stop a bit
                 path = null;
                 return;
+                //Maybe some reachedEndOfPath callback here if needed, for now we'll just null the path
             }
         }
 
@@ -133,7 +150,7 @@ public class BaddiePathfinder : NetworkBehaviour
         currentVelocity = dir * speed;
         //Debug.Log($"Pos: {this.transform.position}, Point:{path.vectorPath[currentWaypoint]} {currentWaypoint}");
         //Also need to set the rotation somewhere
-
+        this.transform.LookAt(path.vectorPath[currentWaypoint]);
 
     }
 

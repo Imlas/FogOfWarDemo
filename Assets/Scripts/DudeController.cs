@@ -13,8 +13,11 @@ public class DudeController : NetworkBehaviour
     [SerializeField] private LayerMask groundPlaneMask;
 
     public float moveSpeed;
+    public float turnSpeed;
     [SerializeField] private Vector3 velocity;
     [SerializeField] private Rigidbody rb;
+
+    private Vector3 worldMousePos;
 
 
     //The "network" version of Start
@@ -46,14 +49,23 @@ public class DudeController : NetworkBehaviour
         //We only want to be running this for the "player" that the client owns
         if (!isLocalPlayer) return;
 
+        velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
+
         Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, groundPlaneMask))
         {
-            Vector3 mousePos = hit.point;
+            worldMousePos = hit.point;
             //Debug.Log($"MousePos: {mousePos}");
-            transform.LookAt(mousePos + Vector3.up * transform.position.y);
+            //transform.LookAt(mousePos + Vector3.up * transform.position.y);
+            //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(mousePos + Vector3.up * transform.position.y), turnSpeed * Time.deltaTime);
+            //Debug.Log($"Mouse world: {worldMousePos}. Mouse local: {this.transform.InverseTransformPoint(worldMousePos)}");
+            //transform.rotation = Quaternion.LookRotation(this.transform.InverseTransformPoint(mousePos), Vector3.up);
+            Vector3 lookDir = worldMousePos - this.transform.position;
+            float angle = -1 * (Mathf.Atan2(lookDir.z, lookDir.x) * Mathf.Rad2Deg - 90f);
+            //Gonna be super honest - no idea why I have to negative the angle I get from this. But it works.
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0f, angle, 0f), turnSpeed * Time.deltaTime);
         }
         //velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
         ////rb.velocity = this.velocity;
@@ -68,10 +80,10 @@ public class DudeController : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
 
-        velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
 
-        //rb.MovePosition(transform.position + velocity * Time.deltaTime);
+        //rb.MovePosition(transform.position + velocity * Time.fixedDeltaTime);
         rb.velocity = this.velocity;
+
     }
 
     [Server]

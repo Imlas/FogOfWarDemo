@@ -23,7 +23,7 @@ public class BaddieSpawner : NetworkBehaviour
         timeOfLastSpawn = Time.time;
 
         //For testing, spawn one immediately
-        SpawnBaddie();
+        //SpawnBaddie();
 
     }
 
