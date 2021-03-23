@@ -9,50 +9,79 @@ public class Fadable : NetworkBehaviour
     /// This is a class dedicated to smoothly changing the opactiy of the material(s?) attatched to a gameobject, and syncing that between clients
     /// </summary>
 
-    [SerializeField] private MeshRenderer rend; //This might be modified later as a List
-    [SerializeField] private float fadeTime;
-    [SerializeField] private float unFadeTime;
+    [SerializeField] private MeshRenderer rend;
+    [SerializeField] private float fadeOutTime;
+    [SerializeField] private float fadeInTime;
+
+
 
     private IEnumerator coroutine;
     private float startTime;
-    private float curValue;
+    private float curAlpha;
+
+    private bool isFadingOut;
+    private bool isFadingIn;
+
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+
+
+        //Perhaps some check here of the material's alpha to set isFaded.
+        curAlpha = 1f;
+        isFadingOut = false;
+        isFadingIn = false;
+    }
+
 
     public void FadeOut()
     {
-        FadeOut(fadeTime);
+        FadeOut(fadeOutTime);
     }
 
     public void FadeOut(float _fadeOutTime)
     {
+        if (isFadingOut || curAlpha == 0.0f)
+        {
+            return;
+        }
+
+        if (coroutine != null && isFadingIn)
+        {
+            StopCoroutine(coroutine);
+            isFadingIn = false;
+        }
+
         startTime = Time.time;
-        curValue = 1f;
         coroutine = SmoothFadeOut(_fadeOutTime);
         StartCoroutine(coroutine);
+        isFadingOut = true;
     }
 
     private IEnumerator SmoothFadeOut(float _fadeOutTime)
     {
         //curValue will lerp from 1.0 to 0.0
-        while(curValue >= 0f)
+        while (curAlpha > 0f)
         {
-            curValue = 1f - ((Time.time - startTime) / _fadeOutTime);
+            curAlpha -= Time.deltaTime / _fadeOutTime;
 
             //We then get each material in the renderer, and set the alpha of the BaseColor to the curValue
-            SetAlphaTo(curValue);
+            SetAlphaTo(curAlpha);
             yield return null;
         }
 
         //In case we've overshot 0.0, we'll just set it to a flat 0. 
-        curValue = 0f;
-        SetAlphaTo(curValue);
-
+        curAlpha = 0f;
+        SetAlphaTo(curAlpha);
+        isFadingOut = false;
     }
 
     /// <summary>
     /// Loops through all of the materials in this GameObjects linked MeshRenderer and sets the BaseColorAlpha to newAlpha
     /// </summary>
     /// <param name="newAlpha"></param>
-    public void SetAlphaTo(float newAlpha)
+    private void SetAlphaTo(float newAlpha)
     {
         foreach (Material mat in rend.materials)
         {
@@ -65,34 +94,45 @@ public class Fadable : NetworkBehaviour
 
     public void FadeIn()
     {
-        FadeIn(unFadeTime);
+        FadeIn(fadeInTime);
     }
 
     public void FadeIn(float _fadeInTime)
     {
+        if (isFadingIn || curAlpha == 1.0f)
+        {
+            return;
+        }
+
+        if (coroutine != null && isFadingOut)
+        {
+            StopCoroutine(coroutine);
+            isFadingOut = false;
+        }
+
         startTime = Time.time;
-        curValue = 0.0f;
         coroutine = SmoothFadeIn(_fadeInTime);
         StartCoroutine(coroutine);
-
+        isFadingIn = true;
     }
 
     private IEnumerator SmoothFadeIn(float _fadeInTime)
     {
         //curValue will lerp from 0.0 to 1.0
-        while (curValue <= 1.0f)
+        while (curAlpha <= 1.0f)
         {
-            curValue = ((Time.time - startTime) / _fadeInTime);
+            //curAlpha = ((Time.time - startTime) / _fadeInTime);
+            curAlpha += Time.deltaTime / _fadeInTime;
 
             //We then get each material in the renderer, and set the alpha of the BaseColor to the curValue
-            SetAlphaTo(curValue);
+            SetAlphaTo(curAlpha);
             yield return null;
         }
 
         //In case we've overshot 1.0, we'll just set it to a flat 1. 
-        curValue = 1f;
-        SetAlphaTo(curValue);
-
+        curAlpha = 1f;
+        SetAlphaTo(curAlpha);
+        isFadingIn = false;
     }
 
 
@@ -119,6 +159,5 @@ public class Fadable : NetworkBehaviour
         //    mat.SetColor("_BaseColor", new Color(curColor.r, curColor.g, curColor.b, 0.0f));
         //}
     }
-
 
 }
