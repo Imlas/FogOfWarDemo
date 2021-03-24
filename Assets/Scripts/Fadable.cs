@@ -16,7 +16,7 @@ public class Fadable : NetworkBehaviour
 
 
     private IEnumerator coroutine;
-    private float curAlpha;
+    [SyncVar] private float curAlpha;
 
     private bool isFadingOut;
     private bool isFadingIn;
@@ -36,16 +36,18 @@ public class Fadable : NetworkBehaviour
     /// Will slowly (over fadeOutTime seconds) decrease the alpha of the colors of all of the materials on the linked MeshRenderer.
     /// Uses the default fadeOutTime.
     /// </summary>
-    public void FadeOut()
-    {
-        FadeOut(fadeOutTime);
-    }
+    //[ClientRpc]
+    //public void RPCFadeOut()
+    //{
+    //    RPCFadeOut(fadeOutTime);
+    //}
 
     /// <summary>
     /// Will slowly (over _fadeOutTime seconds) decrease the alpha of the colors of all of the materials on the linked MeshRenderer.
     /// </summary>
     /// <param name="_fadeOutTime"></param>
-    public void FadeOut(float _fadeOutTime)
+    [ClientRpc]
+    public void RPCFadeOut(float _fadeOutTime)
     {
         if (isFadingOut || curAlpha == 0f)
         {
@@ -98,12 +100,14 @@ public class Fadable : NetworkBehaviour
 
     }
 
-    public void FadeIn()
-    {
-        FadeIn(fadeInTime);
-    }
+    //[ClientRpc]
+    //public void RPCFadeIn()
+    //{
+    //    RPCFadeIn(fadeInTime);
+    //}
 
-    public void FadeIn(float _fadeInTime)
+    [ClientRpc]
+    public void RPCFadeIn(float _fadeInTime)
     {
         if (isFadingIn || curAlpha == 1.0f)
         {
@@ -144,11 +148,17 @@ public class Fadable : NetworkBehaviour
 
     }
 
+    [ClientRpc]
+    public void RPCAlphaToLog(string testString)
+    {
+        Debug.Log($"The alpha of this Fadable is: {curAlpha}. {testString}");
+    }
+
 
     [ContextMenu(("Fade Out"))]
     private void EditorFadeOutTest()
     {
-        FadeOut();
+        RPCFadeOut(fadeOutTime);
         //foreach(Material mat in rend.materials)
         //{
         //    Debug.Log($"Material color is {mat.GetColor("_BaseColor")}");
@@ -160,7 +170,7 @@ public class Fadable : NetworkBehaviour
     [ContextMenu(("Fade In"))]
     private void EditorFadeInTest()
     {
-        FadeIn();
+        RPCFadeIn(fadeInTime);
         //foreach(Material mat in rend.materials)
         //{
         //    Debug.Log($"Material color is {mat.GetColor("_BaseColor")}");

@@ -20,6 +20,7 @@ public class FoVNetworkManager : NetworkManager
 
         player.SetDisplayName($"Player {numPlayers}");
         BaddieManager.Instance.AddPlayer(player.gameObject);
+        FoVCompiler.Instance.AddFoVProvider(player.gameObject);
         Debug.Log($"New player spawned at {player.gameObject.transform.position}");
 
         //Add them to the list of players (for baddie purposes?)
@@ -37,6 +38,8 @@ public class FoVNetworkManager : NetworkManager
         //Debug.Log($"There are now {numPlayers} players");
     }
 
+    
+
     public override void OnServerDisconnect(NetworkConnection conn)
     {
         //Stop spawning baddies if there's no more players
@@ -45,8 +48,12 @@ public class FoVNetworkManager : NetworkManager
             //blah
         }
 
+        DudeController player = conn.identity.gameObject.GetComponent<DudeController>();
+        BaddieManager.Instance.RemovePlayer(player.gameObject);
 
         // call base functionality (actually destroys the player)
         base.OnServerDisconnect(conn);
+
+
     }
 }

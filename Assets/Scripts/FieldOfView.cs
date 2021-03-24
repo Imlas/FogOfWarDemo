@@ -7,9 +7,10 @@ public class FieldOfView : NetworkBehaviour
 {
     //One spot for improvement with this would be the detection of interior edges, perhaps by comparing the normal of the raycast hit and running a similar edge detection as the hit vs nohit outer edge
 
+    //Also an option is to interestingly account for elevation is to make the vision range much longer, but angled downward such that it intersects the proper distance away
+
     public float viewRadius;
-    [Range(0,360)]
-    public float viewAngle;
+    [Range(0,360)] public float viewAngle;
     public bool isCircle = false;
     public Transform foVAnchor;
 
@@ -17,7 +18,7 @@ public class FieldOfView : NetworkBehaviour
     public int visTargetLayer;
     public int invisTargetLayer;
     public LayerMask targetMask;
-    public List<GameObject> visibleTargets = new List<GameObject>();
+    [SyncVar] [SerializeField] public List<GameObject> visibleTargets = new List<GameObject>();
 
     [Header("LoS Blocker Mask")]
     public LayerMask obstacleMask;
@@ -34,7 +35,6 @@ public class FieldOfView : NetworkBehaviour
     public MeshFilter viewMeshFilterPrimary;
     //public MeshFilter viewMeshFilterSecondary;
     Mesh viewMesh;
-
 
     //The "network" version of Start
     public override void OnStartAuthority()
@@ -98,7 +98,8 @@ public class FieldOfView : NetworkBehaviour
                 if(!Physics.Raycast(foVAnchor.position, dirToTarget, distToTarget, obstacleMask))
                 {
                     //No obstacle detected between the player and the target
-                    visibleTargets.Add(target.gameObject);
+                    //visibleTargets.Add(target.gameObject);
+                    visibleTargets.Add(target.gameObject.GetComponentInParent<Fadable>().gameObject); //This 100% should get changed to just store the fadable components
                 }
             }
 
