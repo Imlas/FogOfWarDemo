@@ -26,10 +26,18 @@ public class Fadable : NetworkBehaviour
     {
         base.OnStartServer();
 
-        //Perhaps some check here of the material's alpha to set isFaded.
-        curAlpha = 1f;
+        curAlpha = 0f;
+        SetAlphaTo(curAlpha);
         isFadingOut = false;
         isFadingIn = false;
+    }
+
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        SetAlphaTo(curAlpha);
     }
 
     /// <summary>
