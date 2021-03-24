@@ -336,5 +336,5 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   rend: {fileID: 7291375968351531164}
-  fadeTime: 1
-  unFadeTime: 1
+  fadeOutTime: 4
+  fadeInTime: 4

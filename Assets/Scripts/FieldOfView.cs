@@ -35,6 +35,7 @@ public class FieldOfView : NetworkBehaviour
     //public MeshFilter viewMeshFilterSecondary;
     Mesh viewMesh;
 
+
     //The "network" version of Start
     public override void OnStartAuthority()
     {
@@ -73,7 +74,6 @@ public class FieldOfView : NetworkBehaviour
     void FindVisibleTargets()
     {
         visibleTargets.Clear();
-
         //Debug.Log($"Casting sphere from center: {foVAnchor.position} of radius {viewRadius + targetPeekDist}");
 
         Collider[] targetsInViewRadius = Physics.OverlapSphere(foVAnchor.position, viewRadius + targetPeekDist, targetMask); //All targets within the view distance

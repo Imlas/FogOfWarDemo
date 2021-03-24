@@ -16,7 +16,6 @@ public class Fadable : NetworkBehaviour
 
 
     private IEnumerator coroutine;
-    private float startTime;
     private float curAlpha;
 
     private bool isFadingOut;
@@ -27,22 +26,28 @@ public class Fadable : NetworkBehaviour
     {
         base.OnStartServer();
 
-
         //Perhaps some check here of the material's alpha to set isFaded.
         curAlpha = 1f;
         isFadingOut = false;
         isFadingIn = false;
     }
 
-
+    /// <summary>
+    /// Will slowly (over fadeOutTime seconds) decrease the alpha of the colors of all of the materials on the linked MeshRenderer.
+    /// Uses the default fadeOutTime.
+    /// </summary>
     public void FadeOut()
     {
         FadeOut(fadeOutTime);
     }
 
+    /// <summary>
+    /// Will slowly (over _fadeOutTime seconds) decrease the alpha of the colors of all of the materials on the linked MeshRenderer.
+    /// </summary>
+    /// <param name="_fadeOutTime"></param>
     public void FadeOut(float _fadeOutTime)
     {
-        if (isFadingOut || curAlpha == 0.0f)
+        if (isFadingOut || curAlpha == 0f)
         {
             return;
         }
@@ -53,10 +58,10 @@ public class Fadable : NetworkBehaviour
             isFadingIn = false;
         }
 
-        startTime = Time.time;
         coroutine = SmoothFadeOut(_fadeOutTime);
-        StartCoroutine(coroutine);
         isFadingOut = true;
+        StartCoroutine(coroutine);
+        //Debug.Log($"Starting Fade Out at {Time.time}. curAlpha is {curAlpha}");
     }
 
     private IEnumerator SmoothFadeOut(float _fadeOutTime)
@@ -75,6 +80,7 @@ public class Fadable : NetworkBehaviour
         curAlpha = 0f;
         SetAlphaTo(curAlpha);
         isFadingOut = false;
+        //Debug.Log($"Finished Fade Out at {Time.time}. curAlpha is {curAlpha}");
     }
 
     /// <summary>
@@ -110,10 +116,11 @@ public class Fadable : NetworkBehaviour
             isFadingOut = false;
         }
 
-        startTime = Time.time;
         coroutine = SmoothFadeIn(_fadeInTime);
-        StartCoroutine(coroutine);
         isFadingIn = true;
+        StartCoroutine(coroutine);
+        //Debug.Log($"Starting Fade In at {Time.time}. curAlpha is {curAlpha}");
+
     }
 
     private IEnumerator SmoothFadeIn(float _fadeInTime)
@@ -133,6 +140,8 @@ public class Fadable : NetworkBehaviour
         curAlpha = 1f;
         SetAlphaTo(curAlpha);
         isFadingIn = false;
+        //Debug.Log($"Finished Fade In at {Time.time}. curAlpha is {curAlpha}");
+
     }
 
 
