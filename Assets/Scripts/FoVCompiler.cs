@@ -73,6 +73,7 @@ public class FoVCompiler : NetworkBehaviour
     {
         visibleFadables.Clear();
 
+        //We get the list of all visible targets from each FieldOfView that we have stored
         foreach (FieldOfView fov in fovProviders)
         {
             visibleFadables.AddRange(fov.visibleTargets);
@@ -81,6 +82,7 @@ public class FoVCompiler : NetworkBehaviour
         //Now we remove duplicates
         visibleFadables = visibleFadables.Distinct().ToList();
 
+        //Now we send it off to make sure ones that are in visibleFadables are visible
         ToggleVisibilityOfFadables();
 
     }

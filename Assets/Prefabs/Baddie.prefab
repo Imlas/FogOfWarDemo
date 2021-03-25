@@ -150,10 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  moveSpeed: 0
-  turnRate: 0
   attackRange: 2
-  stopDistance: 1
   lastTargetScan: -Infinity
   targetScanDelay: 5
   maxFireAngleDifference: 15
@@ -229,7 +226,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   speed: 4
-  turnSpeed: 10
+  turnSpeed: 180
   nextWaypointMinDistance: 0.25
   rePathRate: 0.5
   finalStopDistance: 3

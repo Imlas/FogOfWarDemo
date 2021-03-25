@@ -145,12 +145,17 @@ public class BaddiePathfinder : NetworkBehaviour
         }
 
         //So now we just need to move towards the currentWaypoint
-        Vector3 dir = (path.vectorPath[currentWaypoint] - this.transform.position).normalized;
+        Vector3 pathDir = (path.vectorPath[currentWaypoint] - this.transform.position).normalized;
 
-        currentVelocity = dir * speed;
+        currentVelocity = pathDir * speed;
         //Debug.Log($"Pos: {this.transform.position}, Point:{path.vectorPath[currentWaypoint]} {currentWaypoint}");
-        //Also need to set the rotation somewhere
-        this.transform.LookAt(path.vectorPath[currentWaypoint]);
+
+        //Next we rotate towards the direction of pathDir
+        float angle = -1 * (Mathf.Atan2(pathDir.z, pathDir.x) * Mathf.Rad2Deg - 90f);
+        //Gonna be super honest - no idea why I have to negative the angle I get from this. But it works.
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0f, angle, 0f), turnSpeed * Time.deltaTime);
+
+
 
     }
 

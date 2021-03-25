@@ -175,7 +175,7 @@ MonoBehaviour:
   edgeResolveIterations: 8
   edgeDistanceThreshold: 0.2
   obstaclePeekDist: 0
-  targetPeekDist: 0
+  targetPeekDist: -0.2
   viewMeshFilterPrimary: {fileID: 2921965219383620523}
 --- !u!1 &1908461316279029045
 GameObject:

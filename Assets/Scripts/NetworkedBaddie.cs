@@ -20,11 +20,11 @@ public class NetworkedBaddie : NetworkBehaviour
     BaddiePathfinder baddiePathfinder;
 
     //For now, neither of these are used. Currently moveSpeed and turnRate are implemented directly into the navAgent component
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float turnRate;
+    //[SerializeField] private float moveSpeed;
+    //[SerializeField] private float turnRate;
 
     [SerializeField] private float attackRange;
-    [SerializeField] private float stopDistance; //stop distance should be smaller than attackDistance
+    //[SerializeField] private float stopDistance; //stop distance should be smaller than attackDistance
 
     [SerializeField] private float lastTargetScan = Mathf.NegativeInfinity;
     [SerializeField] private float targetScanDelay = 10f;
