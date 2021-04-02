@@ -70,6 +70,7 @@ public class BaddiePathfinder : NetworkBehaviour
         }
     }
 
+    //Currently unused?
     [Server]
     void RotateTowardsTarget()
     {
@@ -162,6 +163,7 @@ public class BaddiePathfinder : NetworkBehaviour
     [ServerCallback]
     private void FixedUpdate()
     {
+        //currentVelocity is set in Update, just assigning it here in FixedUpdate as is (probably?) appropriate
         rb.velocity = currentVelocity;
         //rb.MovePosition(transform.position + currentVelocity * Time.deltaTime);
 

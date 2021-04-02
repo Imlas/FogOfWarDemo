@@ -106,7 +106,7 @@ public class FieldOfView : NetworkBehaviour
         }
 
         //ToggleVisibilityOfTargets();
-
+        //Note - toggling the visibility is now handled by the FoVCompiler and Fadable scripts, which do use the visibleTargets List generated here
     }
 
     void ToggleVisibilityOfTargets()

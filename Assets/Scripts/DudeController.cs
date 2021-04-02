@@ -19,6 +19,10 @@ public class DudeController : NetworkBehaviour
 
     private Vector3 worldMousePos;
 
+    [SerializeField] public Transform FirePoint { get; }
+
+    [SerializeField] private Weapon currWeaponEqipped;
+
 
     //The "network" version of Start
     public override void OnStartAuthority()
@@ -70,6 +74,8 @@ public class DudeController : NetworkBehaviour
         //velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
         ////rb.velocity = this.velocity;
         //rb.MovePosition(rb.position + velocity * Time.deltaTime);
+
+
 
 
     }

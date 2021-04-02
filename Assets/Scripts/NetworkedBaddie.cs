@@ -36,11 +36,18 @@ public class NetworkedBaddie : NetworkBehaviour
     [SerializeField] private float attackCooldown; //time in seconds in between attacks
     private float timeOfLastAttack;
 
+    [SyncVar(hook = nameof(HealthUpdated))] [SerializeField] private float currentHealth;
+    [SerializeField] private float maxHealth;
+
+
+
 
 
     public override void OnStartServer()
     {
         base.OnStartServer();
+
+        currentHealth = maxHealth;
 
         //Grab components as needed
         //navAgent = GetComponent<NavMeshAgent>();
@@ -214,6 +221,56 @@ public class NetworkedBaddie : NetworkBehaviour
     void OnCollisionEnter(Collision col)
     {
         
+
+    }
+
+    public float GetCurrentHealth()
+    {
+        return currentHealth;
+    }
+
+    public float GetMaxHealth()
+    {
+        return maxHealth;
+    }
+
+    //We don't need to worry about players randomly calling this, since they don't have authority over Baddies (I mean, except the host. /shrug)
+    public void TakeDamage(float damageAmount)
+    {
+        //Fow now this is super duper simple. No armor/etc.
+        currentHealth -= damageAmount;
+
+        //Now that we've taken damage, we'll check if we're dead
+        CheckDeath();
+
+        //We may want to have a 'stagger' check/animation/etc. happen here
+
+    }
+
+    //Used to have a single check to see if health is too low, or whatever other things we might throw on, and to trigger BaddieDie as appropriate
+    private void CheckDeath()
+    {
+        //For now, we just check if currentHeatlh <= 0
+        if(currentHealth <= 0f)
+        {
+            BaddieDie();
+        }
+    }
+
+    private void BaddieDie()
+    {
+        //Here we maybe play a sound effect, award the player points, spawn a death animation/ragdoll, and in general destroy this GameObject
+
+        Debug.Log($"{this.gameObject.name} is destroyed.");
+
+        NetworkServer.Destroy(this.gameObject);
+
+    }
+
+    //Remember, these hook functions need to take in the old value and the new value, even if we don't use both
+    public void HealthUpdated(float oldHP, float newHP)
+    {
+        //This would be where we update UI related to this, play a sound, display damage numbers, etc.
 
     }
 

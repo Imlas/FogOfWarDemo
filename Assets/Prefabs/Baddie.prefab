@@ -155,6 +155,8 @@ MonoBehaviour:
   targetScanDelay: 5
   maxFireAngleDifference: 15
   attackCooldown: 2
+  currentHealth: 0
+  maxHealth: 100
 --- !u!114 &7291375968447318364
 MonoBehaviour:
   m_ObjectHideFlags: 0

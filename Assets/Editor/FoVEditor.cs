@@ -20,7 +20,7 @@ public class FoVEditor : Editor
         Handles.color = Color.red;
         foreach(GameObject visibleTargets in fow.visibleTargets)
         {
-            Handles.DrawLine(fow.transform.position, visibleTargets.transform.position);
+            //Handles.DrawLine(fow.transform.position, visibleTargets.transform.position);
         }
     }
 }
