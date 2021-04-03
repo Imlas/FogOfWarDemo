@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
@@ -45,14 +46,14 @@ public class Weapon : NetworkBehaviour
     public virtual void CmdShoot()
     {
         Debug.Log("Base Shoot");
-        //Should probably have this throw an exception, since it shouldn't ever be called
+        throw new NotImplementedException();
     }
 
     [Command]
     public virtual void CmdReload()
     {
         Debug.Log("Base Reload");
-        //Should probably have this throw an exception, since it shouldn't ever be called
+        throw new NotImplementedException();
     }
 
 }
