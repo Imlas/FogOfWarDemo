@@ -69,12 +69,23 @@ public class DudeController : NetworkBehaviour
             Vector3 lookDir = worldMousePos - this.transform.position;
             float angle = -1 * (Mathf.Atan2(lookDir.z, lookDir.x) * Mathf.Rad2Deg - 90f);
             //Gonna be super honest - no idea why I have to negative the angle I get from this. But it works.
+
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0f, angle, 0f), turnSpeed * Time.deltaTime);
         }
         //velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
         ////rb.velocity = this.velocity;
         //rb.MovePosition(rb.position + velocity * Time.deltaTime);
 
+        //Now that we've done all that moving, let's check for shooting
+        if (currWeaponEqipped == null) return; //Shouldn't be needed once we can confirm the player always has a weapon.
+
+        if(Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currWeaponEqipped.IsAutomatic))
+        {
+            if (currWeaponEqipped.CanShoot())
+            {
+                currWeaponEqipped.CmdShoot();
+            }            
+        }
 
 
 

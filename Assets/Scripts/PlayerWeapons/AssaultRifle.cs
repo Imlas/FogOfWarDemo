@@ -26,6 +26,9 @@ public class AssaultRifle : Weapon
         GameObject newShot = Instantiate(bulletPrefab, shotPoint.position, Quaternion.identity); //Note, doesn't yet modify the angle
         NetworkServer.Spawn(newShot);
 
+        //We'll probably want to modify this to match the weapon pattern, with a generic "Bullet" class?
+        newShot.GetComponent<GenericBullet>().damage = this.damage;
+
 
         //Push the projectile(s)
         newShot.GetComponent<Rigidbody>().velocity = shotSpeed * Vector3.forward;
@@ -34,7 +37,7 @@ public class AssaultRifle : Weapon
         //One day I'll have audio in anything I make. Maybe. Not today.
 
         //Decrement ammo
-        base.CurrentClipAmmo--;
+        base.currentClipAmmo--;
 
         //update timeLastFired
         base.timeLastFired = Time.time;
@@ -49,19 +52,30 @@ public class AssaultRifle : Weapon
         //Maybe allow canceling (by changing weapons?)
 
 
-        if(CurrentClipAmmo == MaxClipAmmo || CurrentReserveAmmo == 0)
+        if(currentClipAmmo == maxClipAmmo || currentReserveAmmo == 0)
         {
             //Clip ammo is maxed or total ammo is 0
             return;
         }
 
         //For now, we'll stick with a model of not "wasting" existing bullets in the clip
-        int bulletsToRefill = Mathf.Min(MaxClipAmmo - CurrentClipAmmo, CurrentReserveAmmo);
+        int bulletsToRefill = Mathf.Min(maxClipAmmo - currentClipAmmo, currentReserveAmmo);
 
         //Add this number of bullets to the clip, and subtract it from reserves
-        CurrentClipAmmo += bulletsToRefill;
-        CurrentReserveAmmo -= bulletsToRefill;
+        currentClipAmmo += bulletsToRefill;
+        currentReserveAmmo -= bulletsToRefill;
+    }
 
+    public override void AddReserveAmmo(int numAmmo)
+    {
+        //Add the indicated amount of ammo
+        currentReserveAmmo += numAmmo;
+
+        //If we're over the max, discard down to the max
+        if(currentReserveAmmo > maxReserveAmmo)
+        {
+            currentReserveAmmo = maxReserveAmmo;
+        }
     }
 
 }
