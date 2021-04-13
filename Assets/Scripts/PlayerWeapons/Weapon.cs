@@ -6,7 +6,7 @@ using UnityEngine;
 
 //Note, we make this a network behavior, since it needs to spawn stuff down the road
 //Fun fact: Making it a networkBehavior, which is a MonoBehavior, means this *must* exist as a component on a GameObject
-public class Weapon : NetworkBehaviour
+public class Weapon : MonoBehaviour
 {
     //None of these should need to be syncvars, since you're never firing other player's guns/etc. Nor is most of it ever being changed dynamically
 
@@ -61,15 +61,13 @@ public class Weapon : NetworkBehaviour
         return true;
     }
 
-    [Command]
-    public virtual void CmdShoot()
+    public virtual List<GameObject> Shoot()
     {
         Debug.Log("Base Shoot");
         throw new NotImplementedException();
     }
 
-    [Command]
-    public virtual void CmdReload()
+    public virtual void Reload()
     {
         Debug.Log("Base Reload");
         throw new NotImplementedException();

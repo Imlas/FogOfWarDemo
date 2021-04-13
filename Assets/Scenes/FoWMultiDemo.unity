@@ -336,7 +336,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1136880031}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &72347417
 MonoBehaviour:
@@ -392,6 +392,8 @@ MonoBehaviour:
   playerSpawnMethod: 1
   spawnPrefabs:
   - {fileID: 7291375968447318362, guid: 78e9a8caf7eaec14eae293876b6fd55f, type: 3}
+  - {fileID: 2710132233996455431, guid: d9f6fcd255cdeca4897ada4818934f83, type: 3}
+  - {fileID: 3986291717819993380, guid: f5aaa8c3e6676ac4aa0b74ae82ed6a6a, type: 3}
 --- !u!114 &72347419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1992,8 +1994,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1683516719}
   - {fileID: 72347416}
+  - {fileID: 1683516719}
   - {fileID: 2058076637}
   - {fileID: 1175431931}
   m_Father: {fileID: 0}
@@ -2613,7 +2615,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1136880031}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1683516720
 MonoBehaviour:

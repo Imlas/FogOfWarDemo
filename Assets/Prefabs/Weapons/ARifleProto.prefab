@@ -61,8 +61,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1478a83577929444a8a9853300bfffc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
   usesAmmo: 1
   maxClipAmmo: 30
   currentClipAmmo: 30
@@ -75,4 +73,4 @@ MonoBehaviour:
   spreadAngle: 35
   adsSpreadAngle: 5
   bulletPrefab: {fileID: 3986291717819993380, guid: f5aaa8c3e6676ac4aa0b74ae82ed6a6a, type: 3}
-  shotSpeed: 50
+  shotSpeed: 25

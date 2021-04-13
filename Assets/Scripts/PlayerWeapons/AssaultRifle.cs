@@ -8,23 +8,25 @@ public class AssaultRifle : Weapon
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private float shotSpeed; //The speed of the projectile. For now this is constant, but may look better to have a small ~5%? variation
 
-    [Command]
-    public override void CmdShoot()
+    public override List<GameObject> Shoot()
     {
         Debug.Log("ARifle Shoot");
 
         //We do the same check for ammo and c/d here as a security measure.
         if (!base.CanShoot())
         {
-            return;
+            return null;
         }
+
+        //(Other weapons might spawn multiple shots at once (ie. shotgun), so we have this as a list
+        List<GameObject> bullets = new List<GameObject>();
 
         //Spawn projectile(s) at the spawn point, modified by the spreadAngle
         //For now the shot point is static on the player. In the future this will possibly be looking for a 'weapon model' component, and grab the FirePoint from there
-        Transform shotPoint = this.GetComponentInParent<DudeController>().FirePoint;
+        Transform shotPoint = this.GetComponentInParent<DudeController>().firePoint;
 
-        GameObject newShot = Instantiate(bulletPrefab, shotPoint.position, Quaternion.identity); //Note, doesn't yet modify the angle
-        NetworkServer.Spawn(newShot);
+        GameObject newShot = Instantiate(bulletPrefab, shotPoint.position, shotPoint.rotation); //Note, doesn't yet modify the angle
+        //NetworkServer.Spawn(newShot);
 
         //We'll probably want to modify this to match the weapon pattern, with a generic "Bullet" class?
         newShot.GetComponent<GenericBullet>().damage = this.damage;
@@ -32,6 +34,10 @@ public class AssaultRifle : Weapon
 
         //Push the projectile(s)
         newShot.GetComponent<Rigidbody>().velocity = shotSpeed * Vector3.forward;
+
+        //Add the newShot to the list of bullets
+        bullets.Add(newShot);
+
 
         //Play sounds
         //One day I'll have audio in anything I make. Maybe. Not today.
@@ -41,10 +47,11 @@ public class AssaultRifle : Weapon
 
         //update timeLastFired
         base.timeLastFired = Time.time;
+
+        return bullets;
     }
 
-    [Command]
-    public override void CmdReload()
+    public override void Reload()
     {
         Debug.Log("ARifle Reload");
         //For now this just reloads instantly, no cooldown or time required

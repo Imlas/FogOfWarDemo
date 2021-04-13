@@ -19,7 +19,7 @@ public class DudeController : NetworkBehaviour
 
     private Vector3 worldMousePos;
 
-    [SerializeField] public Transform FirePoint { get; }
+    [SerializeField] public Transform firePoint;
 
     [SerializeField] private Weapon currWeaponEqipped;
 
@@ -83,13 +83,26 @@ public class DudeController : NetworkBehaviour
         {
             if (currWeaponEqipped.CanShoot())
             {
-                currWeaponEqipped.CmdShoot();
+                CmdPlayerShoot();
             }            
         }
 
-
-
     }
+
+    [Command]
+    private void CmdPlayerShoot()
+    {
+        List<GameObject> bullets = currWeaponEqipped.Shoot();
+
+        if(bullets != null)
+        {
+            foreach(GameObject bullet in bullets)
+            {
+                NetworkServer.Spawn(bullet, connectionToClient); //We spawn the bullets server-side
+            }
+        }
+    }
+
 
     //Will only run on clients, not on the server
     [ClientCallback]
