@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Mirror;
+//using Mirror;
 using UnityEngine;
 
 //Note, we make this a network behavior, since it needs to spawn stuff down the road

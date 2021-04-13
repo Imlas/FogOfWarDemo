@@ -79,6 +79,11 @@ public class DudeController : NetworkBehaviour
         //Now that we've done all that moving, let's check for shooting
         if (currWeaponEqipped == null) return; //Shouldn't be needed once we can confirm the player always has a weapon.
 
+        if (Input.GetKeyDown(KeyCode.R)) //Reload is hard-bound to R for now (all of this should eventually be migrated to the new input manager)
+        {
+            CmdPlayerReload();
+        }
+
         if(Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currWeaponEqipped.IsAutomatic))
         {
             if (currWeaponEqipped.CanShoot())
@@ -87,20 +92,48 @@ public class DudeController : NetworkBehaviour
             }            
         }
 
+
+
     }
 
     [Command]
     private void CmdPlayerShoot()
     {
+        //The way I'd like to do this is have this function have the server spawn the authoritative projectile (no gfx needed)
+        //And also all for the clients to Instantiate a graphical version of the shots (that have collision, but just disappear without damage/etc.)
+        //We would probably want to spawn hit gfx/sfx based only on the server colisions, but see how it looks/feels
+
+        if (!currWeaponEqipped.CanShoot()) return;
+
         List<GameObject> bullets = currWeaponEqipped.Shoot();
 
         if(bullets != null)
         {
             foreach(GameObject bullet in bullets)
             {
-                NetworkServer.Spawn(bullet, connectionToClient); //We spawn the bullets server-side
+                //NetworkServer.Spawn(bullet, connectionToClient); //We spawn the bullets server-side
+                NetworkServer.Spawn(bullet);
             }
+
+
+
         }
+
+        //Debug.Break();
+    }
+
+    [Command]
+    private void CmdPlayerReload()
+    {
+        currWeaponEqipped.Reload();
+    }
+
+    [ClientRpc]
+    private void RpcPlayerShoot()
+    {
+        //Spawns the visual bullets that all clients see
+        //Also triggers the appropriate sound effect (eventually, once I have sound ever)
+
     }
 
 

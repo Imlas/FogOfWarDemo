@@ -29,7 +29,7 @@ public class GenericBullet : NetworkBehaviour
         NetworkServer.Destroy(this.gameObject);
     }
 
-    [ServerCallback]
+    //[ServerCallback]
     private void Update()
     {
         transform.position += transform.forward * Time.deltaTime * speed;

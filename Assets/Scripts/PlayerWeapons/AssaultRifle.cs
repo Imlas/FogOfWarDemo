@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-using Mirror;
+//using Mirror;
 using UnityEngine;
 
 public class AssaultRifle : Weapon
 {
     [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private GameObject bulletCosmeticPrefab;
     [SerializeField] private float shotSpeed; //The speed of the projectile. For now this is constant, but may look better to have a small ~5%? variation
 
     public override List<GameObject> Shoot()
     {
-        Debug.Log("ARifle Shoot");
+        //Debug.Log("ARifle Shoot");
 
         //We do the same check for ammo and c/d here as a security measure.
         if (!base.CanShoot())
@@ -35,13 +36,10 @@ public class AssaultRifle : Weapon
 
         //Push the projectile(s)
         //newShot.GetComponent<Rigidbody>().velocity = shotSpeed * Vector3.forward;
+        //Note - projectiles now push themselves (just a transform movement in update)
 
         //Add the newShot to the list of bullets
         bullets.Add(newShot);
-
-
-        //Play sounds
-        //One day I'll have audio in anything I make. Maybe. Not today.
 
         //Decrement ammo
         base.currentClipAmmo--;
