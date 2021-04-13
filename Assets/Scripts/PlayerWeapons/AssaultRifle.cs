@@ -29,11 +29,12 @@ public class AssaultRifle : Weapon
         //NetworkServer.Spawn(newShot);
 
         //We'll probably want to modify this to match the weapon pattern, with a generic "Bullet" class?
-        newShot.GetComponent<GenericBullet>().damage = this.damage;
-
+        GenericBullet bullet = newShot.GetComponent<GenericBullet>();
+        bullet.damage = this.damage;
+        bullet.speed = this.shotSpeed;
 
         //Push the projectile(s)
-        newShot.GetComponent<Rigidbody>().velocity = shotSpeed * Vector3.forward;
+        //newShot.GetComponent<Rigidbody>().velocity = shotSpeed * Vector3.forward;
 
         //Add the newShot to the list of bullets
         bullets.Add(newShot);

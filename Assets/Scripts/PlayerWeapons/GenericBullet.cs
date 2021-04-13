@@ -6,6 +6,7 @@ using UnityEngine;
 public class GenericBullet : NetworkBehaviour
 {
     public float damage;
+    public float speed;
     [SerializeField] private float bulletLifetime = 5f;
 
     public override void OnStartServer()
@@ -16,7 +17,7 @@ public class GenericBullet : NetworkBehaviour
     }
 
     [ServerCallback]
-    void OnCollisionEnter(Collision col)
+    void OnTriggerEnter(Collider col)
     {
         Debug.Log($"Bullet collided with {col.gameObject.name} for {damage} damage");
         DestroySelf();
@@ -26,6 +27,12 @@ public class GenericBullet : NetworkBehaviour
     private void DestroySelf()
     {
         NetworkServer.Destroy(this.gameObject);
+    }
+
+    [ServerCallback]
+    private void Update()
+    {
+        transform.position += transform.forward * Time.deltaTime * speed;
     }
 
 }
