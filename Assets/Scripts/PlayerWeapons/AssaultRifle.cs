@@ -9,18 +9,19 @@ public class AssaultRifle : Weapon
     [SerializeField] private GameObject bulletCosmeticPrefab;
     [SerializeField] private float shotSpeed; //The speed of the projectile. For now this is constant, but may look better to have a small ~5%? variation
 
-    public override List<GameObject> Shoot()
+    public override BulletReturn Shoot()
     {
         //Debug.Log("ARifle Shoot");
+        //(Other weapons might spawn multiple shots at once (ie. shotgun), so we have this as a list
+        List<GameObject> serverBullets = new List<GameObject>();
+        List<GameObject> gfxBullets = new List<GameObject>();
 
         //We do the same check for ammo and c/d here as a security measure.
         if (!base.CanShoot())
         {
-            return null;
+            return new BulletReturn(false, serverBullets, gfxBullets); //Apparently structs aren't nullable. If I wanted/needed this it would need to be a class
         }
 
-        //(Other weapons might spawn multiple shots at once (ie. shotgun), so we have this as a list
-        List<GameObject> bullets = new List<GameObject>();
 
         //Spawn projectile(s) at the spawn point, modified by the spreadAngle
         //For now the shot point is static on the player. In the future this will possibly be looking for a 'weapon model' component, and grab the FirePoint from there
@@ -39,7 +40,7 @@ public class AssaultRifle : Weapon
         //Note - projectiles now push themselves (just a transform movement in update)
 
         //Add the newShot to the list of bullets
-        bullets.Add(newShot);
+        serverBullets.Add(newShot);
 
         //Decrement ammo
         base.currentClipAmmo--;
@@ -47,7 +48,7 @@ public class AssaultRifle : Weapon
         //update timeLastFired
         base.timeLastFired = Time.time;
 
-        return bullets;
+        return new BulletReturn(true, serverBullets, gfxBullets);
     }
 
     public override void Reload()

@@ -61,7 +61,7 @@ public class Weapon : MonoBehaviour
         return true;
     }
 
-    public virtual List<GameObject> Shoot()
+    public virtual BulletReturn Shoot()
     {
         Debug.Log("Base Shoot");
         throw new NotImplementedException();
@@ -79,5 +79,23 @@ public class Weapon : MonoBehaviour
         Debug.Log("Base AddAmmo");
         throw new NotImplementedException();
     }
-
 }
+
+/// <summary>
+/// BulletReturn is a pair of List<GameObject>, one for the GOs that the server will spawn and have control over and that will be used for hit detection,etc/
+/// GfxBullets is the list of GOs that the server will RPC the clients to Instantiate, which represent the graphical bits, which should move smoothly.
+/// </summary>
+public struct BulletReturn
+{
+    public bool DidFire { get; }
+    public List<GameObject> ServerBullets { get; }
+    public List<GameObject> GfxBullets { get; }
+
+    public BulletReturn(bool _didfire, List<GameObject> _serverBullets, List<GameObject> _gfxBullets)
+    {
+        DidFire = _didfire;
+        ServerBullets = _serverBullets;
+        GfxBullets = _gfxBullets;
+    }
+}
+

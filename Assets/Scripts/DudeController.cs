@@ -105,18 +105,17 @@ public class DudeController : NetworkBehaviour
 
         if (!currWeaponEqipped.CanShoot()) return;
 
-        List<GameObject> bullets = currWeaponEqipped.Shoot();
+        BulletReturn bullets = currWeaponEqipped.Shoot();
 
-        if(bullets != null)
+        if(bullets.DidFire == true)
         {
-            foreach(GameObject bullet in bullets)
+            foreach(GameObject bullet in bullets.ServerBullets)
             {
                 //NetworkServer.Spawn(bullet, connectionToClient); //We spawn the bullets server-side
                 NetworkServer.Spawn(bullet);
             }
 
-
-
+            RpcPlayerShoot(bullets.GfxBullets);
         }
 
         //Debug.Break();
@@ -129,11 +128,14 @@ public class DudeController : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void RpcPlayerShoot()
+    private void RpcPlayerShoot(List<GameObject> bulletGFX)
     {
         //Spawns the visual bullets that all clients see
         //Also triggers the appropriate sound effect (eventually, once I have sound ever)
-
+        foreach(GameObject bGFX in bulletGFX)
+        {
+            Instantiate(bGFX, firePoint.position, firePoint.rotation); //NOT RIGHT
+        }
     }
 
 

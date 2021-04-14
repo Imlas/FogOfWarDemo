@@ -55,4 +55,5 @@ MonoBehaviour:
   spreadAngle: 35
   adsSpreadAngle: 5
   bulletPrefab: {fileID: 3986291717819993380, guid: f5aaa8c3e6676ac4aa0b74ae82ed6a6a, type: 3}
+  bulletCosmeticPrefab: {fileID: 3986291717819993380, guid: 0f90b09b48f738942b8460e48f430dd3, type: 3}
   shotSpeed: 25
