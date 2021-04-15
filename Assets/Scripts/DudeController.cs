@@ -99,6 +99,21 @@ public class DudeController : NetworkBehaviour
     [Command]
     private void CmdPlayerShoot()
     {
+        //Thoughts:
+        //Scrap the Weapon children, make Weapon a normal class
+        //Give it a weaponType enum, with the options:
+        // singleRay (single shots, hitscan)
+        // burstRay (similar, but will kick off a coroutine to fire the other shots with delay)
+        // shotgunRay (multiple shots at once (maybe with some non-uniform distribution?), hitscan)
+        //  both of the above need to include a numberOfShots value
+        // constantRay (for a continuous laser - pulse laser would be one of the above)
+        // singleMissile (for something that actually fires a projectile with a collider)
+        // --For all of the above, can do burst or single, just based on reading a numOfShots variable. If it's 1, then ignore worrying about repeat shots
+        // For all of these, this command will do the appropriate case and will either rayCast to determine the hit immediately, or server-side instantiate an invisible (so host won't see it) GameObject
+        //  in this case, both the invis and the gfx version should have similar (the same?) script for movement/etc.
+        // After server-side bits, the server will ClientRPC to have them all Instantiate the appropriate bullet streak/visible gfx/mussle flash/sfx/etc.
+
+
         //The way I'd like to do this is have this function have the server spawn the authoritative projectile (no gfx needed)
         //And also all for the clients to Instantiate a graphical version of the shots (that have collision, but just disappear without damage/etc.)
         //We would probably want to spawn hit gfx/sfx based only on the server colisions, but see how it looks/feels
