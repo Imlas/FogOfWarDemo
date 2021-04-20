@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Mirror;
 using UnityEngine;
 
-public class GenericBullet : NetworkBehaviour
+public class GenericBullet : MonoBehaviour
 {
     //Moves forward at a given speed. On trigger collision it instantiates the hit gfx (sparks/etc.) and destroys this object
     //Optionally, may need to stop the object moving and destroy a few frames later so the trail can fade out - see how it looks
@@ -11,39 +10,39 @@ public class GenericBullet : NetworkBehaviour
 
     //public float damage;
     public float speed;
-    [SerializeField] private float bulletLifetime = 5f;
+    private bool hasHit = false;
     [SerializeField] private GameObject hitGFXObject;
+    [SerializeField] private float fadeTime;
 
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
 
-        Invoke(nameof(DestroySelf), bulletLifetime);
-    }
 
-    [ServerCallback]
     void OnTriggerEnter(Collider col)
     {
-        //Check trigger tags
-        Debug.Log($"Bullet collided with {col.gameObject.name}");
+        if (!hasHit)
+        {
+            //Check trigger tags
+            Debug.Log($"Bullet collided with {col.gameObject.name}");
 
-        //Instantiate the hit gfx
+            //Instantiate the hit gfx
 
 
-        //Destroy this object
-        DestroySelf();
+            //Switch hasHit so the same bullet can't repeatedly trigger
+            hasHit = true;
+
+            //Destroy this object
+            Destroy(this.gameObject, fadeTime);
+
+        }
     }
 
-    [Server]
-    private void DestroySelf()
-    {
-        NetworkServer.Destroy(this.gameObject);
-    }
 
-    //[ServerCallback]
+
     private void Update()
     {
-        transform.position += transform.forward * Time.deltaTime * speed;
+        if (!hasHit)
+        {
+            transform.position += transform.forward * Time.deltaTime * speed;
+        }
     }
 
 }

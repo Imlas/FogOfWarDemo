@@ -126,6 +126,8 @@ MonoBehaviour:
   range: 10
   spreadAngle: 80
   adsSpreadAngle: 40
+  muzzleFlashGFX: {fileID: 0}
+  bulletGFX: {fileID: 0}
 --- !u!33 &5519884667956222358
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -266,6 +268,8 @@ MonoBehaviour:
   range: 5
   spreadAngle: 20
   adsSpreadAngle: 5
+  muzzleFlashGFX: {fileID: 0}
+  bulletGFX: {fileID: 0}
 --- !u!33 &4709492840646342165
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1054,6 +1058,8 @@ MonoBehaviour:
   range: 0
   spreadAngle: 0
   adsSpreadAngle: 0
+  muzzleFlashGFX: {fileID: 0}
+  bulletGFX: {fileID: 0}
 --- !u!33 &515860950387505269
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1246,6 +1252,8 @@ MonoBehaviour:
   range: 15
   spreadAngle: 18
   adsSpreadAngle: 2
+  muzzleFlashGFX: {fileID: 0}
+  bulletGFX: {fileID: 0}
 --- !u!33 &4318280465951612003
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1482,6 +1490,8 @@ MonoBehaviour:
   range: 15
   spreadAngle: 20
   adsSpreadAngle: 2
+  muzzleFlashGFX: {fileID: 2212069842753138813, guid: 053634fdc253d704fa80c82ccfebaa45, type: 3}
+  bulletGFX: {fileID: 3986291717819993380, guid: 0f90b09b48f738942b8460e48f430dd3, type: 3}
 --- !u!33 &3587977744268316460
 MeshFilter:
   m_ObjectHideFlags: 0

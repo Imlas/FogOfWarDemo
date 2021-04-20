@@ -108,9 +108,15 @@ public class DudeController : NetworkBehaviour
         //Now that we've done all that moving, let's check for shooting
         //if (currWeaponEqipped == null) return; //Shouldn't be needed once we can confirm the player always has a weapon.
 
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            //Debugging/testing
+            Debug.Log("Test F1 press!");
+        }
+
         if (Input.GetKeyDown(KeyCode.R)) //Reload is hard-bound to R for now (all of this should eventually be migrated to the new input manager)
         {
-            //CmdPlayerReload();
+            CmdPlayerReload();
         }
 
         if (Input.GetAxisRaw("Mouse ScrollWheel") != 0)
@@ -201,7 +207,33 @@ public class DudeController : NetworkBehaviour
         {
             case WeaponShotType.Hitscan:
                 //blah
-                Debug.Log("Weapon shot type: Hitscan");
+                //Debug.Log("Weapon shot type: Hitscan");
+                //Instantiate the muzzle flash GFX at the fire point
+                //RpcPlayerInstantiate(currWeaponEqipped.MuzzleFlashGFX, firePoint.position, firePoint.rotation);
+                Instantiate(currWeaponEqipped.MuzzleFlashGFX, firePoint.position, firePoint.rotation);
+
+
+                //Figure out what angle the shot will actually come out at (based on RNG + if the player is adsing)
+
+                //Do the raycast to determine the hit
+
+                //If the raycast hit something damage-able, do damage as appropraite
+
+                //Instantiate the bullet gfx at the actual raycast angle
+                //(TODO - we're cheating right now and not modifying the angle)
+                //RpcPlayerInstantiate(currWeaponEqipped.BulletGFX, firePoint.position, firePoint.rotation);
+                Instantiate(currWeaponEqipped.BulletGFX, firePoint.position, firePoint.rotation);
+
+
+                //Maybe instantiate the bullet hit gfx at the hit position? (see if it looks weird to have it happen right away, or if it should be delayed slightly)
+
+                //Call the weapon's shoot function to correctly decrement ammo/reset shot time
+                currWeaponEqipped.Shoot();
+
+                //Play SFX (lolsound)
+
+                //Update the ammo text
+                UpdateAmmoText();
 
                 break;
             case WeaponShotType.Shotgun_Hitscan:
@@ -232,6 +264,14 @@ public class DudeController : NetworkBehaviour
     private void CmdPlayerReload()
     {
         currWeaponEqipped.Reload();
+
+        UpdateAmmoText();
+    }
+
+    [ClientRpc]
+    private void RpcPlayerInstantiate(GameObject gameObject, Vector3 position, Quaternion rotation)
+    {
+        Instantiate(gameObject, position, rotation);
     }
 
     [ClientRpc]

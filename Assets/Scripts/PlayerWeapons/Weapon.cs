@@ -32,6 +32,10 @@ public class Weapon : MonoBehaviour
     [SerializeField] protected float spreadAngle;  // the potential max difference +/- from the intended shot angle
     [SerializeField] protected float adsSpreadAngle;  // a decreased spread while "aiming down sights"
 
+    [SerializeField] protected GameObject muzzleFlashGFX; //The gfx that is instantiated at the fire point and aligned with the fire point
+    [SerializeField] protected GameObject bulletGFX; //The gfx that is instantiated at the fire point and aligned with the actual shot direction
+
+
     #region Getters
     //The big wall of getters. Not super sure if I like this style but we're tryin' it.
     //Also not sure if there's any huge benefit over just setting all of the fields public
@@ -51,6 +55,9 @@ public class Weapon : MonoBehaviour
     public float Range { get => range; }
     public float SpreadAngle { get => spreadAngle; }
     public float AdsSpreadAngle { get => adsSpreadAngle; }
+    public GameObject MuzzleFlashGFX { get => muzzleFlashGFX; }
+    public GameObject BulletGFX { get => bulletGFX; }
+
     #endregion
 
 
@@ -68,16 +75,23 @@ public class Weapon : MonoBehaviour
         return true;
     }
 
+    //Shoot doesn't actually instantiate anything, but resets the "last fired time" and decrements ammo
     public virtual void Shoot()
     {
-        Debug.Log("Base Shoot");
-        throw new NotImplementedException();
+        //Debug.Log("Base Shoot");
+        timeLastFired = Time.time;
+        currentClipAmmo--;
     }
 
     public virtual void Reload()
     {
-        Debug.Log("Base Reload");
-        throw new NotImplementedException();
+        //Debug.Log("Base Reload");
+        //For now this just instantly reloads. Should probably have a delay placed on it in the dude controller
+        int bulletsToReload = Mathf.Min(maxClipAmmo - currentClipAmmo, currentReserveAmmo);
+
+        currentReserveAmmo -= bulletsToReload;
+        currentClipAmmo += bulletsToReload;
+
     }
 
     //Note, this is for adding ammo to the reserveAmmo (ie. pick up more ammo)
