@@ -101,6 +101,8 @@ public class DudeController : NetworkBehaviour
             float angle = -1 * (Mathf.Atan2(lookDir.z, lookDir.x) * Mathf.Rad2Deg - 90f);
             //Gonna be super honest - no idea why I have to negative the angle I get from this. But it works.
 
+            //TODO - update this so that the firePoint transform is what's actually looking at the mouse position (right now aiming is kinda... janky)
+
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0f, angle, 0f), turnSpeed * Time.deltaTime);
         }
         //velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
@@ -120,6 +122,8 @@ public class DudeController : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.R)) //Reload is hard-bound to R for now (all of this should eventually be migrated to the new input manager)
         {
             CmdPlayerReload();
+            UpdateAmmoText();
+
         }
 
         if (Input.GetAxisRaw("Mouse ScrollWheel") != 0)
@@ -148,6 +152,13 @@ public class DudeController : NetworkBehaviour
             if (currWeaponEqipped.CanShoot())
             {
                 CmdPlayerShoot();
+
+                //Call the weapon's shoot function to correctly decrement ammo/reset shot time
+                //(This should probably be in a targeted RPC somehow... idk)
+                currWeaponEqipped.Shoot();
+
+                //Update ammo text
+                UpdateAmmoText();
             }
         }
 
@@ -230,8 +241,8 @@ public class DudeController : NetworkBehaviour
                 //blah
                 //Debug.Log("Weapon shot type: Hitscan");
                 //Instantiate the muzzle flash GFX at the fire point
-                Debug.Log(currWeaponEqipped.WeaponName);
-                Debug.Log(currWeaponEqipped.MuzzleFlashGFX.name);
+                //Debug.Log(currWeaponEqipped.WeaponName);
+                //Debug.Log(currWeaponEqipped.MuzzleFlashGFX.name);
 
                 GameObject tempGO = Instantiate(currWeaponEqipped.MuzzleFlashGFX, firePoint.position, firePoint.rotation);
                 NetworkServer.Spawn(tempGO);
@@ -253,13 +264,11 @@ public class DudeController : NetworkBehaviour
 
                 //Maybe instantiate the bullet hit gfx at the hit position? (see if it looks weird to have it happen right away, or if it should be delayed slightly)
 
-                //Call the weapon's shoot function to correctly decrement ammo/reset shot time
-                currWeaponEqipped.Shoot();
-
                 //Play SFX (lolsound)
 
-                //Update the ammo text
-                UpdateAmmoText();
+                //if currWeaponEqipped.ShotsPerBurst > 1, then do spawn a coroutine to fire the other bullets as needed
+                
+
 
                 break;
             case WeaponShotType.Shotgun_Hitscan:
@@ -290,8 +299,6 @@ public class DudeController : NetworkBehaviour
     private void CmdPlayerReload()
     {
         currWeaponEqipped.Reload();
-
-        UpdateAmmoText();
     }
 
     //[ClientRpc]
@@ -356,6 +363,12 @@ public class DudeController : NetworkBehaviour
             return;
         }
 
-        ammoText.text = $"Ammo: {currWeaponEqipped.CurrentClipAmmo} / {currWeaponEqipped.CurrentReserveAmmo}";
+        ammoText.text = $"{currWeaponEqipped.WeaponName}: {currWeaponEqipped.CurrentClipAmmo} / {currWeaponEqipped.CurrentReserveAmmo}";
     }
+
+    //[TargetRpc]
+    //public void TargetUpdateAmmoText()
+    //{
+    //    UpdateAmmoText();
+    //}
 }
