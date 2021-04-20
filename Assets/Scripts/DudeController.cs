@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DudeController : NetworkBehaviour
 {
@@ -21,8 +23,34 @@ public class DudeController : NetworkBehaviour
 
     [SerializeField] public Transform firePoint;
 
+
+    [SyncVar(hook = nameof(OnWeaponChanged))] [SerializeField] private int syncWeaponEquippedIndex = 0; //We'll add a hook to this later
+    [SerializeField] private int localWeaponEquippedIndex = 0;
+    [SerializeField] private GameObject[] equippedWeaponGOs;
     [SerializeField] private Weapon currWeaponEqipped;
 
+    [SerializeField] private TextMeshProUGUI ammoText;
+
+    private void Awake()
+    {
+        ammoText = SceneAssignmentHelper.Instance.uiAmmoText;
+
+        //Disable all weapons
+        foreach(GameObject weaponGO in equippedWeaponGOs)
+        {
+            if(weaponGO != null)
+            {
+                weaponGO.SetActive(false);
+            }
+        }
+
+        //Set the correct weapon to active (if non-null)
+        if (equippedWeaponGOs[localWeaponEquippedIndex] != null)
+        {
+            equippedWeaponGOs[localWeaponEquippedIndex].SetActive(true);
+            currWeaponEqipped = equippedWeaponGOs[localWeaponEquippedIndex].GetComponent<Weapon>();
+        }
+    }
 
     //The "network" version of Start
     public override void OnStartAuthority()
@@ -44,6 +72,7 @@ public class DudeController : NetworkBehaviour
         //rb = GetComponent<Rigidbody>();
 
         //Debug.Log("OnStartAuthority finished");
+        UpdateAmmoText();
     }
 
     //Will only run on clients, not on the server
@@ -77,23 +106,71 @@ public class DudeController : NetworkBehaviour
         //rb.MovePosition(rb.position + velocity * Time.deltaTime);
 
         //Now that we've done all that moving, let's check for shooting
-        if (currWeaponEqipped == null) return; //Shouldn't be needed once we can confirm the player always has a weapon.
+        //if (currWeaponEqipped == null) return; //Shouldn't be needed once we can confirm the player always has a weapon.
 
         if (Input.GetKeyDown(KeyCode.R)) //Reload is hard-bound to R for now (all of this should eventually be migrated to the new input manager)
         {
-            CmdPlayerReload();
+            //CmdPlayerReload();
         }
 
-        if(Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currWeaponEqipped.IsAutomatic))
+        if (Input.GetAxisRaw("Mouse ScrollWheel") != 0)
+        {
+            if (Input.GetAxis("Mouse ScrollWheel") > 0)
+            {
+                //Mouse Wheel Up
+                localWeaponEquippedIndex++;
+            }
+
+            if (Input.GetAxis("Mouse ScrollWheel") < 0)
+            {
+                //Mouse Wheel Down
+                localWeaponEquippedIndex--;
+            }
+
+            //Rectify the index if out of bounds
+            if (localWeaponEquippedIndex < 0) { localWeaponEquippedIndex = equippedWeaponGOs.Length - 1; } //Too low, wrap it back to the end
+            if (localWeaponEquippedIndex > equippedWeaponGOs.Length - 1) { localWeaponEquippedIndex = 0; } //Too far, wrap it back to the beginning
+
+            CmdChangeActiveWeapon(localWeaponEquippedIndex);
+        }
+
+        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currWeaponEqipped.IsAutomatic))
         {
             if (currWeaponEqipped.CanShoot())
             {
                 CmdPlayerShoot();
-            }            
+            }
         }
 
 
 
+    }
+
+    void OnWeaponChanged(int _oldIndex, int _newIndex)
+    {
+        if(_oldIndex >= 0 && _oldIndex <= equippedWeaponGOs.Length - 1 && equippedWeaponGOs[_oldIndex] != null)
+        {
+            equippedWeaponGOs[_oldIndex].SetActive(false);
+        }
+
+        if (_newIndex >= 0 && _newIndex <= equippedWeaponGOs.Length - 1 && equippedWeaponGOs[_newIndex] != null)
+        {
+            equippedWeaponGOs[_newIndex].SetActive(true);
+        }
+
+        if (isLocalPlayer)
+        {
+            currWeaponEqipped = equippedWeaponGOs[_newIndex].GetComponent<Weapon>();
+            UpdateAmmoText();
+        }
+    }
+
+    [Command]
+    public void CmdChangeActiveWeapon(int newIndex)
+    {
+        //Some validation here to double check it's in bounds, and that the current weapon isn't on cooldown/etc/etc/
+
+        syncWeaponEquippedIndex = newIndex;
     }
 
     [Command]
@@ -120,18 +197,33 @@ public class DudeController : NetworkBehaviour
 
         if (!currWeaponEqipped.CanShoot()) return;
 
-        BulletReturn bullets = currWeaponEqipped.Shoot();
-
-        if(bullets.DidFire == true)
+        switch (currWeaponEqipped.GetWeaponShotType)
         {
-            foreach(GameObject bullet in bullets.ServerBullets)
-            {
-                //NetworkServer.Spawn(bullet, connectionToClient); //We spawn the bullets server-side
-                NetworkServer.Spawn(bullet);
-            }
+            case WeaponShotType.Hitscan:
+                //blah
+                Debug.Log("Weapon shot type: Hitscan");
 
-            RpcPlayerShoot(bullets.GfxBullets);
+                break;
+            case WeaponShotType.Shotgun_Hitscan:
+                //blah
+                Debug.Log("Weapon shot type: Shotgun");
+
+
+                break;
+            case WeaponShotType.Constant_Ray:
+                //blah
+                Debug.Log("Weapon shot type: Constant Ray");
+
+
+                break;
+            case WeaponShotType.Projectile:
+                //blah
+                Debug.Log("Weapon shot type: Projectile");
+
+
+                break;
         }
+
 
         //Debug.Break();
     }
@@ -149,7 +241,7 @@ public class DudeController : NetworkBehaviour
         //Also triggers the appropriate sound effect (eventually, once I have sound ever)
         foreach(GameObject bGFX in bulletGFX)
         {
-            Instantiate(bGFX, firePoint.position, firePoint.rotation); //NOT RIGHT
+            Instantiate(bGFX, bGFX.transform.position, bGFX.transform.rotation); //NOT RIGHT??
         }
     }
 
@@ -180,5 +272,16 @@ public class DudeController : NetworkBehaviour
     public string GetDisplayName()
     {
         return displayName;
+    }
+
+    private void UpdateAmmoText()
+    {
+        if (ammoText == null || currWeaponEqipped == null)
+        {
+            Debug.Log("Issue updating Ammo text");
+            return;
+        }
+
+        ammoText.text = $"Ammo: {currWeaponEqipped.CurrentClipAmmo} / {currWeaponEqipped.CurrentReserveAmmo}";
     }
 }
