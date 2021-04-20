@@ -1483,7 +1483,7 @@ MonoBehaviour:
   maxReserveAmmo: 240
   currentReserveAmmo: 240
   isAutomatic: 1
-  fireRate: 2
+  fireRate: 10
   shotsPerBurst: 1
   burstShotTime: 0
   damage: 25

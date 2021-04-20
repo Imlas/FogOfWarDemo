@@ -31,6 +31,8 @@ public class DudeController : NetworkBehaviour
 
     [SerializeField] private TextMeshProUGUI ammoText;
 
+    //[SerializeField] private GameObject testCube;
+
     private void Awake()
     {
         ammoText = SceneAssignmentHelper.Instance.uiAmmoText;
@@ -108,11 +110,12 @@ public class DudeController : NetworkBehaviour
         //Now that we've done all that moving, let's check for shooting
         //if (currWeaponEqipped == null) return; //Shouldn't be needed once we can confirm the player always has a weapon.
 
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            //Debugging/testing
-            Debug.Log("Test F1 press!");
-        }
+        //if (Input.GetKeyDown(KeyCode.F1))
+        //{
+        //    //Debugging/testing
+        //    Debug.Log("Test F1 press!");
+        //    CmdTestCommand();
+        //}
 
         if (Input.GetKeyDown(KeyCode.R)) //Reload is hard-bound to R for now (all of this should eventually be migrated to the new input manager)
         {
@@ -171,6 +174,24 @@ public class DudeController : NetworkBehaviour
         }
     }
 
+    //[Command]
+    //public void CmdTestCommand()
+    //{
+    //    Debug.Log("Command receieved. Calling the RPC");
+    //    RpcTest();
+    //}
+
+    //[ClientRpc]
+    //public void RpcTest()
+    //{
+    //    //It's interesting to note that in the following line the Random number is different for each client
+    //    ammoText.text = $"Test {Random.Range(0, 100)}.";
+
+    //    //Instantiate(testCube, this.transform.position, this.transform.rotation);
+    //    Debug.Log(currWeaponEqipped.MuzzleFlashGFX.name);
+    //    Instantiate(currWeaponEqipped.MuzzleFlashGFX, firePoint.position, firePoint.rotation);
+    //}
+
     [Command]
     public void CmdChangeActiveWeapon(int newIndex)
     {
@@ -209,8 +230,12 @@ public class DudeController : NetworkBehaviour
                 //blah
                 //Debug.Log("Weapon shot type: Hitscan");
                 //Instantiate the muzzle flash GFX at the fire point
-                //RpcPlayerInstantiate(currWeaponEqipped.MuzzleFlashGFX, firePoint.position, firePoint.rotation);
-                Instantiate(currWeaponEqipped.MuzzleFlashGFX, firePoint.position, firePoint.rotation);
+                Debug.Log(currWeaponEqipped.WeaponName);
+                Debug.Log(currWeaponEqipped.MuzzleFlashGFX.name);
+
+                GameObject tempGO = Instantiate(currWeaponEqipped.MuzzleFlashGFX, firePoint.position, firePoint.rotation);
+                NetworkServer.Spawn(tempGO);
+                //RpcPlayerInstantiate(tempGO, tempGO.transform.position, tempGO.transform.rotation);
 
 
                 //Figure out what angle the shot will actually come out at (based on RNG + if the player is adsing)
@@ -222,7 +247,8 @@ public class DudeController : NetworkBehaviour
                 //Instantiate the bullet gfx at the actual raycast angle
                 //(TODO - we're cheating right now and not modifying the angle)
                 //RpcPlayerInstantiate(currWeaponEqipped.BulletGFX, firePoint.position, firePoint.rotation);
-                Instantiate(currWeaponEqipped.BulletGFX, firePoint.position, firePoint.rotation);
+                tempGO = Instantiate(currWeaponEqipped.BulletGFX, firePoint.position, firePoint.rotation);
+                NetworkServer.Spawn(tempGO);
 
 
                 //Maybe instantiate the bullet hit gfx at the hit position? (see if it looks weird to have it happen right away, or if it should be delayed slightly)
@@ -268,22 +294,30 @@ public class DudeController : NetworkBehaviour
         UpdateAmmoText();
     }
 
-    [ClientRpc]
-    private void RpcPlayerInstantiate(GameObject gameObject, Vector3 position, Quaternion rotation)
-    {
-        Instantiate(gameObject, position, rotation);
-    }
+    //[ClientRpc]
+    //private void RpcPlayerInstantiate(GameObject _gameObject, Vector3 _position, Quaternion _rotation)
+    //{
+    //    //THIS WHOLE THING WAS DUMB - THIS IS EXACTLY WHAT NETWORKSERVER.SPAWN(FOO) IS FOR
 
-    [ClientRpc]
-    private void RpcPlayerShoot(List<GameObject> bulletGFX)
-    {
-        //Spawns the visual bullets that all clients see
-        //Also triggers the appropriate sound effect (eventually, once I have sound ever)
-        foreach(GameObject bGFX in bulletGFX)
-        {
-            Instantiate(bGFX, bGFX.transform.position, bGFX.transform.rotation); //NOT RIGHT??
-        }
-    }
+    //    if(_gameObject == null)
+    //    {
+    //        Debug.Log("lolwut");
+    //        Debug.Break();
+    //        return;
+    //    }
+    //    Instantiate(_gameObject, _position, _rotation);
+    //}
+
+    //[ClientRpc]
+    //private void RpcPlayerShoot(List<GameObject> bulletGFX)
+    //{
+    //    //Spawns the visual bullets that all clients see
+    //    //Also triggers the appropriate sound effect (eventually, once I have sound ever)
+    //    foreach(GameObject bGFX in bulletGFX)
+    //    {
+    //        Instantiate(bGFX, bGFX.transform.position, bGFX.transform.rotation); //NOT RIGHT??
+    //    }
+    //}
 
 
     //Will only run on clients, not on the server
