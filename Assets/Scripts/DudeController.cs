@@ -121,6 +121,7 @@ public class DudeController : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.R)) //Reload is hard-bound to R for now (all of this should eventually be migrated to the new input manager)
         {
+            Debug.Log("Pressed R");
             CmdPlayerReload();
             UpdateAmmoText();
 
@@ -296,8 +297,9 @@ public class DudeController : NetworkBehaviour
     }
 
     [Command]
-    private void CmdPlayerReload()
+    public void CmdPlayerReload()
     {
+        Debug.Log("Cmd Player Reload");
         currWeaponEqipped.Reload();
     }
 

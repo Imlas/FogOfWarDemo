@@ -76,16 +76,16 @@ public class Weapon : MonoBehaviour
     }
 
     //Shoot doesn't actually instantiate anything, but resets the "last fired time" and decrements ammo
-    public virtual void Shoot()
+    public void Shoot()
     {
         //Debug.Log("Base Shoot");
         timeLastFired = Time.time;
         currentClipAmmo--;
     }
 
-    public virtual void Reload()
+    public void Reload()
     {
-        //Debug.Log("Base Reload");
+        Debug.Log("Base Reload");
         //For now this just instantly reloads. Should probably have a delay placed on it in the dude controller
         int bulletsToReload = Mathf.Min(maxClipAmmo - currentClipAmmo, currentReserveAmmo);
 
@@ -95,7 +95,7 @@ public class Weapon : MonoBehaviour
     }
 
     //Note, this is for adding ammo to the reserveAmmo (ie. pick up more ammo)
-    public virtual void AddReserveAmmo(int numAmmo)
+    public void AddReserveAmmo(int numAmmo)
     {
         Debug.Log("Base AddAmmo");
         throw new NotImplementedException();
