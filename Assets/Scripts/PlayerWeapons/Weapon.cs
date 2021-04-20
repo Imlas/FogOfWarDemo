@@ -4,13 +4,14 @@ using System.Collections.Generic;
 //using Mirror;
 using UnityEngine;
 
-//Note, we make this a network behavior, since it needs to spawn stuff down the road
-//Fun fact: Making it a networkBehavior, which is a MonoBehavior, means this *must* exist as a component on a GameObject
 public class Weapon : MonoBehaviour
 {
     //None of these should need to be syncvars, since you're never firing other player's guns/etc. Nor is most of it ever being changed dynamically
+    [SerializeField] protected string weaponName;
 
-    [SerializeField] protected bool usesAmmo;
+    [SerializeField] protected bool usesAmmo; //Could be false, but will need UI support, different reload/etc.
+
+    [SerializeField] protected WeaponShotType weaponShotType; //Enum
 
     [SerializeField] protected int maxClipAmmo;
     [SerializeField] protected int currentClipAmmo;
@@ -20,9 +21,11 @@ public class Weapon : MonoBehaviour
 
     [SerializeField] protected bool isAutomatic; //True if you can "hold down" fire and keep firing. False if "fire" must be released and re-pressed to fire next. Not super sure where this get checked yet
     [SerializeField] protected float fireRate; //Shots per sec (so the inverse is num secs between shots)
+    [SerializeField] protected int shotsPerBurst = 1; //The number of shots per "trigger pull". Most weapons will be 1. Burst fire will be higher. Also used for number of shotgun "pellets"
+    [SerializeField] protected float burstShotTime; //Time in between shots of a single burst
     protected float timeLastFired = Mathf.NegativeInfinity;
 
-    [SerializeField] protected float damage; //Per bullet, or per seccond for lasers
+    [SerializeField] protected float damage; //Per bullet/pellet, or per seccond for lasers
 
     [SerializeField] protected float range; //The max distance a projectile can travel, or the length of a laser
 
@@ -32,13 +35,17 @@ public class Weapon : MonoBehaviour
     #region Getters
     //The big wall of getters. Not super sure if I like this style but we're tryin' it.
     //Also not sure if there's any huge benefit over just setting all of the fields public
-    public bool UsesAmmo { get => usesAmmo;}
+    public string WeaponName { get => weaponName; }
+    public bool UsesAmmo { get => usesAmmo; }
+    public WeaponShotType  GetWeaponShotType {get => weaponShotType;}
     public int MaxClipAmmo { get => maxClipAmmo; }
     public int CurrentClipAmmo { get => currentClipAmmo; }
     public int MaxCmaxReserveAmmolipAmmo { get => maxReserveAmmo; }
     public int CurrentReserveAmmo { get => currentReserveAmmo; }
     public bool IsAutomatic { get => isAutomatic; }
     public float FireRate { get => fireRate; }
+    public int ShotsPerBurst { get => shotsPerBurst; }
+    public float BurstShotTime { get => burstShotTime; }
     public float TimeLastFired { get => timeLastFired; }
     public float Damage { get => damage; }
     public float Range { get => range; }
@@ -61,7 +68,7 @@ public class Weapon : MonoBehaviour
         return true;
     }
 
-    public virtual BulletReturn Shoot()
+    public virtual void Shoot()
     {
         Debug.Log("Base Shoot");
         throw new NotImplementedException();
@@ -81,21 +88,14 @@ public class Weapon : MonoBehaviour
     }
 }
 
-/// <summary>
-/// BulletReturn is a pair of List<GameObject>, one for the GOs that the server will spawn and have control over and that will be used for hit detection,etc/
-/// GfxBullets is the list of GOs that the server will RPC the clients to Instantiate, which represent the graphical bits, which should move smoothly.
-/// </summary>
-public struct BulletReturn
+public enum WeaponShotType
 {
-    public bool DidFire { get; }
-    public List<GameObject> ServerBullets { get; }
-    public List<GameObject> GfxBullets { get; }
-
-    public BulletReturn(bool _didfire, List<GameObject> _serverBullets, List<GameObject> _gfxBullets)
-    {
-        DidFire = _didfire;
-        ServerBullets = _serverBullets;
-        GfxBullets = _gfxBullets;
-    }
+    Hitscan,
+    Shotgun_Hitscan,
+    Constant_Ray,
+    Projectile
 }
+
+
+
 
