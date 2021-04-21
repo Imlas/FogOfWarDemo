@@ -35,6 +35,12 @@ public class Weapon : MonoBehaviour
     [SerializeField] protected GameObject muzzleFlashGFX; //The gfx that is instantiated at the fire point and aligned with the fire point
     [SerializeField] protected GameObject bulletGFX; //The gfx that is instantiated at the fire point and aligned with the actual shot direction
 
+    [SerializeField] protected VFXType muzzleVFXType;
+    [SerializeField] protected VFXType streakVFXType;
+    [SerializeField] protected VFXType hitVFXType;
+
+
+
 
     #region Getters
     //The big wall of getters. Not super sure if I like this style but we're tryin' it.
@@ -57,6 +63,10 @@ public class Weapon : MonoBehaviour
     public float AdsSpreadAngle { get => adsSpreadAngle; }
     public GameObject MuzzleFlashGFX { get => muzzleFlashGFX; }
     public GameObject BulletGFX { get => bulletGFX; }
+    public VFXType MuzzleVFXType { get => muzzleVFXType; }
+    public VFXType StreakVFXType { get => streakVFXType; }
+    public VFXType HitVFXType { get => hitVFXType; }
+
 
     #endregion
 
@@ -85,7 +95,7 @@ public class Weapon : MonoBehaviour
 
     public void Reload()
     {
-        Debug.Log("Base Reload");
+        //Debug.Log("Base Reload");
         //For now this just instantly reloads. Should probably have a delay placed on it in the dude controller
         int bulletsToReload = Mathf.Min(maxClipAmmo - currentClipAmmo, currentReserveAmmo);
 

@@ -21,7 +21,7 @@ public class DudeController : NetworkBehaviour
 
     private Vector3 worldMousePos;
 
-    [SerializeField] public Transform firePoint;
+    [SerializeField] public Transform firePoint; //Might need to make this a SyncVar and update it on weapon switch
 
 
     [SyncVar(hook = nameof(OnWeaponChanged))] [SerializeField] private int syncWeaponEquippedIndex = 0; //We'll add a hook to this later
@@ -112,19 +112,17 @@ public class DudeController : NetworkBehaviour
         //Now that we've done all that moving, let's check for shooting
         //if (currWeaponEqipped == null) return; //Shouldn't be needed once we can confirm the player always has a weapon.
 
-        //if (Input.GetKeyDown(KeyCode.F1))
-        //{
-        //    //Debugging/testing
-        //    Debug.Log("Test F1 press!");
-        //    CmdTestCommand();
-        //}
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            //Debugging/testing
+            Debug.Log("Test F1 press!");
+            //CmdTestCommand();
+        }
 
         if (Input.GetKeyDown(KeyCode.R)) //Reload is hard-bound to R for now (all of this should eventually be migrated to the new input manager)
         {
-            Debug.Log("Pressed R");
+            //Debug.Log("Pressed R");
             CmdPlayerReload();
-            UpdateAmmoText();
-
         }
 
         if (Input.GetAxisRaw("Mouse ScrollWheel") != 0)
@@ -160,6 +158,9 @@ public class DudeController : NetworkBehaviour
 
                 //Update ammo text
                 UpdateAmmoText();
+
+                //Debug.Log("Break!");
+                //Debug.Break();
             }
         }
 
@@ -186,23 +187,26 @@ public class DudeController : NetworkBehaviour
         }
     }
 
-    //[Command]
-    //public void CmdTestCommand()
-    //{
-    //    Debug.Log("Command receieved. Calling the RPC");
-    //    RpcTest();
-    //}
+    [Command]
+    public void CmdTestCommand()
+    {
+        Debug.Log("Command receieved. Calling the RPC");
+        VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, VFXType.ARifleMuzzleFlash);
+        //RpcTest();
+    }
 
-    //[ClientRpc]
-    //public void RpcTest()
-    //{
-    //    //It's interesting to note that in the following line the Random number is different for each client
-    //    ammoText.text = $"Test {Random.Range(0, 100)}.";
+    [ClientRpc]
+    public void RpcTest()
+    {
+        Debug.Log("RPC test start");
+        //It's interesting to note that in the following line the Random number is different for each client
+        ammoText.text = $"Test {Random.Range(0, 100)}.";
 
-    //    //Instantiate(testCube, this.transform.position, this.transform.rotation);
-    //    Debug.Log(currWeaponEqipped.MuzzleFlashGFX.name);
-    //    Instantiate(currWeaponEqipped.MuzzleFlashGFX, firePoint.position, firePoint.rotation);
-    //}
+        //Instantiate(testCube, this.transform.position, this.transform.rotation);
+        Debug.Log(currWeaponEqipped.MuzzleFlashGFX.name);
+        GameObject flashGO = Instantiate(currWeaponEqipped.MuzzleFlashGFX, firePoint.position, firePoint.rotation);
+        flashGO.GetComponent<FollowTransform>().targetTrans = firePoint;
+    }
 
     [Command]
     public void CmdChangeActiveWeapon(int newIndex)
@@ -244,9 +248,13 @@ public class DudeController : NetworkBehaviour
                 //Instantiate the muzzle flash GFX at the fire point
                 //Debug.Log(currWeaponEqipped.WeaponName);
                 //Debug.Log(currWeaponEqipped.MuzzleFlashGFX.name);
+                VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, currWeaponEqipped.MuzzleVFXType);
 
-                GameObject tempGO = Instantiate(currWeaponEqipped.MuzzleFlashGFX, firePoint.position, firePoint.rotation);
-                NetworkServer.Spawn(tempGO);
+
+                ////GameObject tempGO = Instantiate(currWeaponEqipped.MuzzleFlashGFX, firePoint.position, firePoint.rotation);
+                ////tempGO.GetComponent<FollowTransform>().targetTrans = firePoint; //For now, this isn't happening on clients
+
+                ////NetworkServer.Spawn(tempGO);
                 //RpcPlayerInstantiate(tempGO, tempGO.transform.position, tempGO.transform.rotation);
 
 
@@ -258,9 +266,11 @@ public class DudeController : NetworkBehaviour
 
                 //Instantiate the bullet gfx at the actual raycast angle
                 //(TODO - we're cheating right now and not modifying the angle)
+                VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, currWeaponEqipped.StreakVFXType);
+
                 //RpcPlayerInstantiate(currWeaponEqipped.BulletGFX, firePoint.position, firePoint.rotation);
-                tempGO = Instantiate(currWeaponEqipped.BulletGFX, firePoint.position, firePoint.rotation);
-                NetworkServer.Spawn(tempGO);
+                ////tempGO = Instantiate(currWeaponEqipped.BulletGFX, firePoint.position, firePoint.rotation);
+                ////NetworkServer.Spawn(tempGO);
 
 
                 //Maybe instantiate the bullet hit gfx at the hit position? (see if it looks weird to have it happen right away, or if it should be delayed slightly)
@@ -268,7 +278,7 @@ public class DudeController : NetworkBehaviour
                 //Play SFX (lolsound)
 
                 //if currWeaponEqipped.ShotsPerBurst > 1, then do spawn a coroutine to fire the other bullets as needed
-                
+
 
 
                 break;
@@ -299,14 +309,22 @@ public class DudeController : NetworkBehaviour
     [Command]
     public void CmdPlayerReload()
     {
-        Debug.Log("Cmd Player Reload");
+        //Debug.Log("Cmd Player Reload");
+        //currWeaponEqipped.Reload();
+        TargetReload();
+    }
+
+    [TargetRpc]
+    public void TargetReload()
+    {
+        //In theory this goes to the "owner", which should just be whoever called the command in the first place?
         currWeaponEqipped.Reload();
+        UpdateAmmoText();
     }
 
     //[ClientRpc]
     //private void RpcPlayerInstantiate(GameObject _gameObject, Vector3 _position, Quaternion _rotation)
     //{
-    //    //THIS WHOLE THING WAS DUMB - THIS IS EXACTLY WHAT NETWORKSERVER.SPAWN(FOO) IS FOR
 
     //    if(_gameObject == null)
     //    {
