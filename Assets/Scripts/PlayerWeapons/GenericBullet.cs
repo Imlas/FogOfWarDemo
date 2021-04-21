@@ -11,7 +11,7 @@ public class GenericBullet : MonoBehaviour
     //public float damage;
     public float speed;
     private bool hasHit = false;
-    [SerializeField] private GameObject hitGFXObject;
+    //[SerializeField] private GameObject hitGFXObject;
     [SerializeField] private float fadeTime;
 
 
@@ -20,8 +20,9 @@ public class GenericBullet : MonoBehaviour
     {
         if (!hasHit)
         {
+            //TODO - need to actually check tag/layer of object
             //Check trigger tags
-            Debug.Log($"Bullet collided with {col.gameObject.name}");
+            //Debug.Log($"Bullet collided with {col.gameObject.name}");
 
             //Instantiate the hit gfx
 

@@ -29,6 +29,8 @@ public class DudeController : NetworkBehaviour
     [SerializeField] private GameObject[] equippedWeaponGOs;
     [SerializeField] private Weapon currWeaponEqipped;
 
+    [SerializeField] private LayerMask targetsAndLoSLayerMask;
+
     [SerializeField] private TextMeshProUGUI ammoText;
 
     //[SerializeField] private GameObject testCube;
@@ -191,7 +193,7 @@ public class DudeController : NetworkBehaviour
     public void CmdTestCommand()
     {
         Debug.Log("Command receieved. Calling the RPC");
-        VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, VFXType.ARifleMuzzleFlash);
+        //VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, VFXType.ARifleMuzzleFlash, firePoint.position, firePoint.rotation);
         //RpcTest();
     }
 
@@ -248,32 +250,34 @@ public class DudeController : NetworkBehaviour
                 //Instantiate the muzzle flash GFX at the fire point
                 //Debug.Log(currWeaponEqipped.WeaponName);
                 //Debug.Log(currWeaponEqipped.MuzzleFlashGFX.name);
-                VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, currWeaponEqipped.MuzzleVFXType);
-
-
-                ////GameObject tempGO = Instantiate(currWeaponEqipped.MuzzleFlashGFX, firePoint.position, firePoint.rotation);
-                ////tempGO.GetComponent<FollowTransform>().targetTrans = firePoint; //For now, this isn't happening on clients
-
-                ////NetworkServer.Spawn(tempGO);
-                //RpcPlayerInstantiate(tempGO, tempGO.transform.position, tempGO.transform.rotation);
-
+                VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, currWeaponEqipped.MuzzleVFXType, firePoint.position, firePoint.rotation);
 
                 //Figure out what angle the shot will actually come out at (based on RNG + if the player is adsing)
 
-                //Do the raycast to determine the hit
-
-                //If the raycast hit something damage-able, do damage as appropraite
-
-                //Instantiate the bullet gfx at the actual raycast angle
+                //Instantiate the bullet gfx at the actual angle
                 //(TODO - we're cheating right now and not modifying the angle)
-                VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, currWeaponEqipped.StreakVFXType);
-
-                //RpcPlayerInstantiate(currWeaponEqipped.BulletGFX, firePoint.position, firePoint.rotation);
-                ////tempGO = Instantiate(currWeaponEqipped.BulletGFX, firePoint.position, firePoint.rotation);
-                ////NetworkServer.Spawn(tempGO);
+                VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, currWeaponEqipped.StreakVFXType, firePoint.position, firePoint.rotation);
 
 
-                //Maybe instantiate the bullet hit gfx at the hit position? (see if it looks weird to have it happen right away, or if it should be delayed slightly)
+                //Do the raycast to determine the hit
+                RaycastHit hit;
+                if(Physics.Raycast(firePoint.position, firePoint.TransformDirection(Vector3.forward), out hit, 100f, targetsAndLoSLayerMask))
+                {
+                    //Debug.DrawRay(firePoint.position, firePoint.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+                    //Debug.Log($"Hit detected at {hit.point}");
+
+                    //If the raycast hit something damage-able, do damage as appropraite
+
+                    //Instantiate bullet hit VFX at hit position
+                    //In the future, might need to move hit point slightly towards firePoint
+                    //For now, a lower quality colision check makes it look okay
+                    VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, currWeaponEqipped.HitVFXType, hit.point, Quaternion.LookRotation(firePoint.position - hit.point));
+                }
+
+                //Debug.Log("Break!");
+                //Debug.Break();
+
+
 
                 //Play SFX (lolsound)
 

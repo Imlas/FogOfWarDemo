@@ -10,6 +10,7 @@ public class VFXSpawner : NetworkBehaviour
     public static VFXSpawner Instance { get { return _instance; } }
 
     [SerializeField] private GameObject testCube;
+
     [SerializeField] private GameObject aRifleMuzzleFlash;
     [SerializeField] private GameObject aRifleBulletStreak;
     [SerializeField] private GameObject aRifleBulletHit;
@@ -29,35 +30,42 @@ public class VFXSpawner : NetworkBehaviour
         }
     }
 
+    //Apparently RPCs cant be overloaded
+    //[ClientRpc]
+    //public void RPCSpawnVFX(NetworkIdentity networkIdentity, VFXType index)
+    //{
+    //    RPCSpawnVFX(networkIdentity, index, networkIdentity.gameObject.transform.position, networkIdentity.gameObject.transform.rotation);
+    //}
+
     [ClientRpc]
-    public void RPCSpawnVFX(NetworkIdentity networkIdentity, VFXType index)
+    public void RPCSpawnVFX(NetworkIdentity networkIdentity, VFXType index, Vector3 _position, Quaternion _rotation)
     {
-        //Need to add another function parameter for arbitrary spawn transforms. Maybe just have an optional position/rotation?
         GameObject vfxGO;
         Transform trans;
-        Debug.Log($"Incoming spawn from {networkIdentity.gameObject.transform.position}");
+        //Debug.Log($"Incoming spawn from {_position}");
 
         switch (index)
         {
             case VFXType.TestCube:
-                vfxGO = Instantiate(testCube, networkIdentity.gameObject.transform.position, networkIdentity.gameObject.transform.rotation);
+                vfxGO = Instantiate(testCube, _position, _rotation);
                 break;
 
             case VFXType.ARifleMuzzleFlash:
                 trans = networkIdentity.gameObject.GetComponent<DudeController>().firePoint;
-                vfxGO = Instantiate(aRifleMuzzleFlash, trans.position, trans.rotation);
+                vfxGO = Instantiate(aRifleMuzzleFlash, _position, _rotation);
                 vfxGO.GetComponent<FollowTransform>().targetTrans = trans;
                 break;
 
             case VFXType.ARifleBulletStreak:
-                trans = networkIdentity.gameObject.GetComponent<DudeController>().firePoint;
-                vfxGO = Instantiate(aRifleBulletStreak, trans.position, trans.rotation);
+                vfxGO = Instantiate(aRifleBulletStreak, _position, _rotation);
                 break;
 
             case VFXType.ARifleBulletHit:
-                //Uhh... for some reason I can't throw an exception here. Likely b/c of the switch?
-                //throw new NotImplementedException();
-                Debug.Log("NotImplemented Switch case in VFXSpawner!");
+                vfxGO = Instantiate(aRifleBulletHit, _position, _rotation);
+
+                break;
+            default:
+                Debug.Log("Unplanned case error");
                 break;
         }
     }

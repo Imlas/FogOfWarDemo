@@ -456,6 +456,9 @@ MonoBehaviour:
   - {fileID: 1419128632354807915}
   - {fileID: 6451969549411764518}
   currWeaponEqipped: {fileID: 0}
+  targetsAndLoSLayerMask:
+    serializedVersion: 2
+    m_Bits: 6272
   ammoText: {fileID: 0}
 --- !u!54 &1908461316057556142
 Rigidbody:

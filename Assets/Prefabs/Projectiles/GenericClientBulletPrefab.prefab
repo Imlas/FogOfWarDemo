@@ -280,7 +280,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 80
-  hitGFXObject: {fileID: 0}
   fadeTime: 0.1
 --- !u!114 &-2352323510011555952
 MonoBehaviour:

@@ -1772,7 +1772,7 @@ MonoBehaviour:
   testCube: {fileID: 6195602110937239433, guid: 4a374aff5cb6ff343aa99d6d1c9ef9c5, type: 3}
   aRifleMuzzleFlash: {fileID: 2212069842753138813, guid: 053634fdc253d704fa80c82ccfebaa45, type: 3}
   aRifleBulletStreak: {fileID: 3986291717819993380, guid: 0f90b09b48f738942b8460e48f430dd3, type: 3}
-  aRifleBulletHit: {fileID: 0}
+  aRifleBulletHit: {fileID: 1578078720192542595, guid: 4a2bc4bb492d71f41ac114a0e342f252, type: 3}
 --- !u!114 &985523570
 MonoBehaviour:
   m_ObjectHideFlags: 0
