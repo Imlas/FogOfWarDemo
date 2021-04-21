@@ -254,9 +254,6 @@ public class DudeController : NetworkBehaviour
 
                 //Figure out what angle the shot will actually come out at (based on RNG + if the player is adsing)
 
-                //Instantiate the bullet gfx at the actual angle
-                //(TODO - we're cheating right now and not modifying the angle)
-                VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, currWeaponEqipped.StreakVFXType, firePoint.position, firePoint.rotation);
 
 
                 //Do the raycast to determine the hit
@@ -265,6 +262,12 @@ public class DudeController : NetworkBehaviour
                 {
                     //Debug.DrawRay(firePoint.position, firePoint.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
                     //Debug.Log($"Hit detected at {hit.point}");
+
+                    //Instantiate the bullet gfx at the actual angle
+                    //(TODO - we're cheating right now and not modifying the angle)
+                    VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, currWeaponEqipped.StreakVFXType, hit.point, firePoint.rotation);
+
+
 
                     //If the raycast hit something damage-able, do damage as appropraite
 

@@ -57,7 +57,10 @@ public class VFXSpawner : NetworkBehaviour
                 break;
 
             case VFXType.ARifleBulletStreak:
-                vfxGO = Instantiate(aRifleBulletStreak, _position, _rotation);
+                trans = networkIdentity.gameObject.GetComponent<DudeController>().firePoint;
+                vfxGO = Instantiate(aRifleBulletStreak, trans.position, trans.rotation);
+                vfxGO.GetComponent<GenericBullet>().target = _position;
+
                 break;
 
             case VFXType.ARifleBulletHit:
