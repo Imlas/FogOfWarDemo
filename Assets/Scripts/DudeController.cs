@@ -21,6 +21,8 @@ public class DudeController : NetworkBehaviour
 
     private Vector3 worldMousePos;
 
+    [SerializeField] public string targetTag = "Target"; //should likely do a tag manager at some point.
+
     [SerializeField] public Transform firePoint; //Might need to make this a SyncVar and update it on weapon switch
 
 
@@ -245,36 +247,44 @@ public class DudeController : NetworkBehaviour
         switch (currWeaponEqipped.GetWeaponShotType)
         {
             case WeaponShotType.Hitscan:
-                //blah
-                //Debug.Log("Weapon shot type: Hitscan");
                 //Instantiate the muzzle flash GFX at the fire point
-                //Debug.Log(currWeaponEqipped.WeaponName);
-                //Debug.Log(currWeaponEqipped.MuzzleFlashGFX.name);
                 VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, currWeaponEqipped.MuzzleVFXType, firePoint.position, firePoint.rotation);
 
                 //Figure out what angle the shot will actually come out at (based on RNG + if the player is adsing)
+                //Once we introduce ADSing, add the conditional in here
+                float deflectionAngle = Random.Range(-currWeaponEqipped.SpreadAngle, currWeaponEqipped.SpreadAngle);
 
-
+                Quaternion adjustedShotRotation = firePoint.rotation * Quaternion.Euler(0f, deflectionAngle, 0f);
+                Vector3 adjustedShotDirection = Quaternion.Euler(0f, deflectionAngle, 0f) * firePoint.TransformDirection(Vector3.forward);
 
                 //Do the raycast to determine the hit
                 RaycastHit hit;
-                if(Physics.Raycast(firePoint.position, firePoint.TransformDirection(Vector3.forward), out hit, 100f, targetsAndLoSLayerMask))
+                if(Physics.Raycast(firePoint.position, adjustedShotDirection, out hit, 100f, targetsAndLoSLayerMask))
                 {
-                    //Debug.DrawRay(firePoint.position, firePoint.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
                     //Debug.Log($"Hit detected at {hit.point}");
+                    //Instantiate the bullet gfx at the actual angle (with the hit target)
+                    VFXSpawner.Instance.RPCSpawnVFXwTarget(this.netIdentity, currWeaponEqipped.StreakVFXType, firePoint.position, adjustedShotRotation, hit.point);
 
-                    //Instantiate the bullet gfx at the actual angle
-                    //(TODO - we're cheating right now and not modifying the angle)
-                    VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, currWeaponEqipped.StreakVFXType, hit.point, firePoint.rotation);
-
-
-
+                    Debug.Log($"Collider with tag {hit.collider.tag} was hit");
                     //If the raycast hit something damage-able, do damage as appropraite
+                    if (hit.collider.CompareTag(targetTag))
+                    {
+                        //NOTE CURRENTLY DOESN"T WORK SINCE THE COLLIDER IS ON A CHILD - LOOKING INTO A REDESIGN ON BADDIE STRUCTURE/SCRIPT LAYOUT
+                        NetworkedBaddie baddie = hit.collider.gameObject.GetComponent<NetworkedBaddie>(); //Hrm - should probably be a seperate component for this "Damageable" or something
+                        Debug.Log($"Baddie {baddie.name} hit");
+                        baddie.TakeDamage(currWeaponEqipped.Damage);
+                    }
 
                     //Instantiate bullet hit VFX at hit position
                     //In the future, might need to move hit point slightly towards firePoint
                     //For now, a lower quality colision check makes it look okay
+                    //Also a future improvement - the sparks should probably be flipped across the normal of the hit point, or somesuch
                     VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, currWeaponEqipped.HitVFXType, hit.point, Quaternion.LookRotation(firePoint.position - hit.point));
+                }
+                else
+                {
+                    //Spawn the bullet streak (without a hit target)
+                    VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, currWeaponEqipped.StreakVFXType, firePoint.position, adjustedShotRotation);
                 }
 
                 //Debug.Log("Break!");
@@ -289,23 +299,30 @@ public class DudeController : NetworkBehaviour
 
 
                 break;
+
             case WeaponShotType.Shotgun_Hitscan:
                 //blah
                 Debug.Log("Weapon shot type: Shotgun");
 
 
                 break;
+
             case WeaponShotType.Constant_Ray:
                 //blah
                 Debug.Log("Weapon shot type: Constant Ray");
 
 
                 break;
+
             case WeaponShotType.Projectile:
                 //blah
                 Debug.Log("Weapon shot type: Projectile");
 
 
+                break;
+
+            default:
+                Debug.Log("Unexpected weapon shot type enum.");
                 break;
         }
 

@@ -11,6 +11,7 @@ public class GenericBullet : MonoBehaviour
     //public float damage;
     public float speed;
     public Vector3 target;
+    public bool useTarget = false;
     private bool hasHit = false;
     //[SerializeField] private GameObject hitGFXObject;
     [SerializeField] private float fadeTime;
@@ -37,28 +38,31 @@ public class GenericBullet : MonoBehaviour
     //    }
     //}
 
+    public void SetTarget(Vector3 _target)
+    {
+        target = _target;
+        useTarget = true;
+    }
+
 
 
     private void Update()
     {
-        if(target == null)
-        {
-            Debug.Log("Generic bullet has no movement target");
-            return;
-        }
-        //if (!hasHit)
-        //{
-        //    transform.position += transform.forward * Time.deltaTime * speed;
-        //}
-
         if (!hasHit)
         {
-            float step = speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, target, step);
-            if(Vector3.SqrMagnitude(target - this.transform.position) < 0.001f)
+            if(!useTarget)
             {
-                hasHit = true;
-                Destroy(this.gameObject, fadeTime);
+                transform.position += transform.forward * Time.deltaTime * speed;
+            }
+            else
+            {
+                float step = speed * Time.deltaTime;
+                transform.position = Vector3.MoveTowards(transform.position, target, step);
+                if (Vector3.SqrMagnitude(target - this.transform.position) < 0.001f)
+                {
+                    hasHit = true;
+                    Destroy(this.gameObject, fadeTime);
+                }
             }
         }
     }

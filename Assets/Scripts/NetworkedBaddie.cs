@@ -40,9 +40,6 @@ public class NetworkedBaddie : NetworkBehaviour
     [SerializeField] private float maxHealth;
 
 
-
-
-
     public override void OnStartServer()
     {
         base.OnStartServer();

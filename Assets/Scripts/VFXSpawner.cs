@@ -30,7 +30,7 @@ public class VFXSpawner : NetworkBehaviour
         }
     }
 
-    //Apparently RPCs cant be overloaded
+    //Apparently RPCs cant be overloaded - this is dumb
     //[ClientRpc]
     //public void RPCSpawnVFX(NetworkIdentity networkIdentity, VFXType index)
     //{
@@ -57,10 +57,7 @@ public class VFXSpawner : NetworkBehaviour
                 break;
 
             case VFXType.ARifleBulletStreak:
-                trans = networkIdentity.gameObject.GetComponent<DudeController>().firePoint;
-                vfxGO = Instantiate(aRifleBulletStreak, trans.position, trans.rotation);
-                vfxGO.GetComponent<GenericBullet>().target = _position;
-
+                vfxGO = Instantiate(aRifleBulletStreak, _position, _rotation);
                 break;
 
             case VFXType.ARifleBulletHit:
@@ -68,10 +65,32 @@ public class VFXSpawner : NetworkBehaviour
 
                 break;
             default:
-                Debug.Log("Unplanned case error");
+                Debug.Log("Unplanned case error for RPCSpawnVFX");
                 break;
         }
     }
+
+    [ClientRpc]
+    public void RPCSpawnVFXwTarget(NetworkIdentity networkIdentity, VFXType index, Vector3 _position, Quaternion _rotation, Vector3 _targetPosition)
+    {
+        GameObject vfxGO;
+        //Transform trans;
+
+        switch (index)
+        {
+            case VFXType.ARifleBulletStreak:
+                //Debug.Log($"Streak starting at: {_position} going to {_targetPosition}");
+                vfxGO = Instantiate(aRifleBulletStreak, _position, _rotation);
+                vfxGO.GetComponent<GenericBullet>().SetTarget(_targetPosition);
+                break;
+
+            default:
+                Debug.Log("Unplanned case error for RPCSpawnVFXwTarget");
+                break;
+        }
+
+    }
+
 }
 
 
