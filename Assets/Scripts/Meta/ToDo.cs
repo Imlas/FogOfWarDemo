@@ -16,10 +16,18 @@ public class ToDo
      * Make a basic Cylinder+Sphere topper + cube barrel tower model
      * Make player towers
      * Add a building system - don't forget to adjust pathfinding/target aquisition
+     * Need to look into/think about buildable vs non-buildable terrain
      * 
      * Start the player resource system
      * 
      * Add map patches for resources/appropriate buildings
+     * 
+     * 
+     * 
+     * 
+     * Think about some swarm-like AI behavior, such as grouping up at a "rally" before attacking (similar to factorio bugs)
+     * 
+     * Way down the list - look into scene templates for making more levels
      * 
      */
 }
