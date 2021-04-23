@@ -7234,6 +7234,27 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &1267858710 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1017553899939424756, guid: fd3ea37085786dd41ab752e59c6acb7d, type: 3}
+  m_PrefabInstance: {fileID: 1720338685}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1267858711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1267858710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 581442b724444f74db2bceb4b2675deb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  currentHealth: 400
+  maxHealth: 400
 --- !u!43 &1286269025
 Mesh:
   m_ObjectHideFlags: 0
@@ -9661,9 +9682,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1017553898335514882, guid: fd3ea37085786dd41ab752e59c6acb7d, type: 3}
+      propertyPath: m_TagString
+      value: Baddie
+      objectReference: {fileID: 0}
+    - target: {fileID: 1017553899084272716, guid: fd3ea37085786dd41ab752e59c6acb7d, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 1017553899939424756, guid: fd3ea37085786dd41ab752e59c6acb7d, type: 3}
       propertyPath: m_Name
       value: BaddieSpawner
+      objectReference: {fileID: 0}
+    - target: {fileID: 1017553899939424756, guid: fd3ea37085786dd41ab752e59c6acb7d, type: 3}
+      propertyPath: m_TagString
+      value: Baddie
       objectReference: {fileID: 0}
     - target: {fileID: 1017553899939424758, guid: fd3ea37085786dd41ab752e59c6acb7d, type: 3}
       propertyPath: baddieProto

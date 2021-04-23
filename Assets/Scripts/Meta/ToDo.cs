@@ -2,14 +2,16 @@
 public class ToDo
 {
     /*
-     * Start a fresh scene, make a first sample level with probuilder
+     * xStart a fresh scene, make a first sample level with probuilder
      * 
-     * Make a singleton tag manager for things to pull from
+     * xMake a singleton tag manager for things to pull from
      * 
-     * Bring in the existing player (Dude) objects, drop the FoV/FoW system
+     * xBring in the existing player (Dude) objects, drop the FoV/FoW system
      * 
-     * Bring in baddieSpawners and baddies
+     * xBring in baddieSpawners and baddies
      * Finish making both of them Damageable
+     * Finish splitting Baddies into Pathfinder/Attacker/Damageable
+     * Add some basic baddie attack animation
      * 
      * Make baddies do damage to player-tagged damageables
      * 

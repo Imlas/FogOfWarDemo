@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 7291375968351531164}
   - component: {fileID: 7291375968351531163}
   - component: {fileID: 744947769704339569}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Sphere
-  m_TagString: Untagged
+  m_TagString: Baddie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -128,9 +128,10 @@ GameObject:
   - component: {fileID: -403487086572262541}
   - component: {fileID: -7785897068128146508}
   - component: {fileID: -2311657214888951181}
-  m_Layer: 11
+  - component: {fileID: 2748266261480607040}
+  m_Layer: 0
   m_Name: Baddie
-  m_TagString: Target
+  m_TagString: Baddie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -334,3 +335,19 @@ MonoBehaviour:
   version: 1
   penalty: 1000
   randomStep: 5
+--- !u!114 &2748266261480607040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7291375968447318362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 581442b724444f74db2bceb4b2675deb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  currentHealth: 100
+  maxHealth: 100

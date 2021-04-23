@@ -21,7 +21,7 @@ public class DudeController : NetworkBehaviour
 
     private Vector3 worldMousePos;
 
-    [SerializeField] public string targetTag = "Target"; //should likely do a tag manager at some point.
+    //[SerializeField] public string targetTag = "Target"; //should likely do a tag manager at some point.
 
     [SerializeField] public Transform firePoint; //Might need to make this a SyncVar and update it on weapon switch
 
@@ -265,14 +265,17 @@ public class DudeController : NetworkBehaviour
                     //Instantiate the bullet gfx at the actual angle (with the hit target)
                     VFXSpawner.Instance.RPCSpawnVFXwTarget(this.netIdentity, currWeaponEqipped.StreakVFXType, firePoint.position, adjustedShotRotation, hit.point);
 
-                    Debug.Log($"Collider with tag {hit.collider.tag} was hit");
+                    //Debug.Log($"Collider with tag {hit.collider.tag} was hit");
                     //If the raycast hit something damage-able, do damage as appropraite
-                    if (hit.collider.CompareTag(targetTag))
+                    if (hit.collider.CompareTag(TagManager.baddieTag))
                     {
-                        //NOTE CURRENTLY DOESN"T WORK SINCE THE COLLIDER IS ON A CHILD - LOOKING INTO A REDESIGN ON BADDIE STRUCTURE/SCRIPT LAYOUT
-                        NetworkedBaddie baddie = hit.collider.gameObject.GetComponent<NetworkedBaddie>(); //Hrm - should probably be a seperate component for this "Damageable" or something
-                        Debug.Log($"Baddie {baddie.name} hit");
+                        Damageable baddie = hit.collider.gameObject.GetComponentInParent<Damageable>();
+                        Debug.Log($"Baddie {baddie.gameObject.name} hit");
                         baddie.TakeDamage(currWeaponEqipped.Damage);
+                    }
+                    if (hit.collider.CompareTag(TagManager.playerTag))
+                    {
+                        //Friendly fire
                     }
 
                     //Instantiate bullet hit VFX at hit position

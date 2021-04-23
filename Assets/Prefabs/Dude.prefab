@@ -444,7 +444,6 @@ MonoBehaviour:
   turnSpeed: 360
   velocity: {x: 0, y: 0, z: 0}
   rb: {fileID: 1908461316057556142}
-  targetTag: Target
   firePoint: {fileID: 2463810431878022375}
   syncWeaponEquippedIndex: 0
   localWeaponEquippedIndex: 0
@@ -457,7 +456,7 @@ MonoBehaviour:
   currWeaponEqipped: {fileID: 0}
   targetsAndLoSLayerMask:
     serializedVersion: 2
-    m_Bits: 6272
+    m_Bits: 129
   ammoText: {fileID: 0}
 --- !u!54 &1908461316057556142
 Rigidbody:
