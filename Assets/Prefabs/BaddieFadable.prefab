@@ -128,6 +128,7 @@ GameObject:
   - component: {fileID: -403487086572262541}
   - component: {fileID: -7785897068128146508}
   - component: {fileID: -2311657214888951181}
+  - component: {fileID: 8994300659359579911}
   m_Layer: 11
   m_Name: Baddie
   m_TagString: Target
@@ -334,3 +335,20 @@ MonoBehaviour:
   version: 1
   penalty: 1000
   randomStep: 5
+--- !u!114 &8994300659359579911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7291375968447318362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f39025efe50cc14b885a71dc898114f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  rend: {fileID: 7291375968351531164}
+  fadeOutTime: 4
+  fadeInTime: 4

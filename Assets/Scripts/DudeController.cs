@@ -66,7 +66,7 @@ public class DudeController : NetworkBehaviour
 
         //If this is the owned player, then set the cinemachine cam to look at/follow this player object
         //If there's more camera changes later, might better to shove this in a seperate camera controller script
-        virtCam = GameObject.FindGameObjectWithTag("MainVirtCam").GetComponent<Cinemachine.CinemachineVirtualCamera>();
+        virtCam = GameObject.FindGameObjectWithTag(TagManager.mainVirtualCamera).GetComponent<Cinemachine.CinemachineVirtualCamera>();
 
         virtCam.m_LookAt = this.transform;
         virtCam.m_Follow = this.transform;
