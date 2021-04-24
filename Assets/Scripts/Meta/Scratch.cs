@@ -55,6 +55,10 @@ public class Scratch
      * PlayerTowers
      * -Pla
      * 
+     * How do we want baddie attacking to work? 
+     * -One hitscan type could be a face player > lock in the angle > charge up for ~0.5ish s > let loose a blast (think similar to GTFO striker tongue wind-up)
+     * -Another option is a more classically dodgeable projectile (...ironically similar to GTFO shooters)
+     * 
      * 
      * 
      * 

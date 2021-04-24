@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class GenericBullet : MonoBehaviour
 {
-    //Moves forward at a given speed. On trigger collision it instantiates the hit gfx (sparks/etc.) and destroys this object
-    //Optionally, may need to stop the object moving and destroy a few frames later so the trail can fade out - see how it looks
-
+    //NOTE - right now this is just a VFX mover
+    //It either moves towards the target at a set speed, or moves forward at a set speed and destroys upon reaching it
 
     //public float damage;
     public float speed;

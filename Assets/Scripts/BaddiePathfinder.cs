@@ -132,7 +132,6 @@ public class BaddiePathfinder : NetworkBehaviour
             //Check if there's more waypoints, if so then ++
             if(currentWaypoint + 1 < path.vectorPath.Count)
             {
-                
                 currentWaypoint++;
             }
             else

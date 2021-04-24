@@ -7,6 +7,7 @@ TagManager:
   - Target
   - MainVirtCam
   - Baddie
+  - LoSBlocker
   layers:
   - Default
   - TransparentFX

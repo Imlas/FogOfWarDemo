@@ -24,6 +24,11 @@ public class NetworkedBaddie : NetworkBehaviour
     //[SerializeField] private float turnRate;
 
     [SerializeField] private float attackRange;
+    [SerializeField] private Transform firePoint;
+    [SerializeField] private BaddieAttackType attackType;
+    [SerializeField] private GameObject projAttackGO;
+    [SerializeField] private VFXType raycastAttackVFX;
+
     //[SerializeField] private float stopDistance; //stop distance should be smaller than attackDistance
 
     [SerializeField] private float lastTargetScan = Mathf.NegativeInfinity;
@@ -36,15 +41,15 @@ public class NetworkedBaddie : NetworkBehaviour
     [SerializeField] private float attackCooldown; //time in seconds in between attacks
     private float timeOfLastAttack;
 
-    [SyncVar(hook = nameof(HealthUpdated))] [SerializeField] private float currentHealth;
-    [SerializeField] private float maxHealth;
+    //[SyncVar(hook = nameof(HealthUpdated))] [SerializeField] private float currentHealth;
+    //[SerializeField] private float maxHealth;
 
 
     public override void OnStartServer()
     {
         base.OnStartServer();
 
-        currentHealth = maxHealth;
+        //currentHealth = maxHealth;
 
         //Grab components as needed
         //navAgent = GetComponent<NavMeshAgent>();
@@ -138,15 +143,44 @@ public class NetworkedBaddie : NetworkBehaviour
     }
 
 
-
+    [Server]
     private void AttackTarget()
     {
         //Debug.Log($"Attack! at {Time.time}");
         //Instantiate projectile, play attack animation of present, play sound effect
         timeOfLastAttack = Time.time;
+
+        switch (attackType)
+        {
+            case BaddieAttackType.Raycast:
+                //This type targets the player, locks in the angle, and begins charging up a (likely shortish range) hitscan attack. After charge time do the raycast (or check a collider for width), and spawn vfx as appropriate
+
+                //foo
+                break;
+            case BaddieAttackType.Projectile:
+                //This case points at the target (ie. player), then spawns(? - might need to instantiate an invis server GO and targetted VFX) the shot which will either shoot past the target or stop (and maybe explode? think missles/grenades)
+                if(projAttackGO == null)
+                {
+                    Debug.Log("Baddie projectile GO is not assigned.");
+                    return;
+                }
+
+                GameObject baddieProj = Instantiate(projAttackGO, firePoint.position, firePoint.rotation);
+                NetworkServer.Spawn(baddieProj);
+
+                //foo
+                break;
+            default:
+                Debug.Log("Unhandled Baddie Attack type!");
+                break;
+
+        }
+
+        //Debug.Log("Break!");
+        //Debug.Break();
     }
 
-    private void TurnToTarget()
+        private void TurnToTarget()
     {
         //Debug.Log($"Turning to face {currentTarget}");
         //Turns the turningPoint (which might be a child part, might be the main GO) towards currentTarget
@@ -172,12 +206,12 @@ public class NetworkedBaddie : NetworkBehaviour
         baddiePathfinder.StartPathTo(currentTarget);
     }
 
-    private void MoveToTarget()
-    {
-        //Moves towards current pathfinding point
-        //For now this does nothing, since we're using the built-in agent self-movement
-        //Once we transition to an independant pathfinder, this will move our unit towards the next pathfinding point (and away from nearby units? idk)
-    }
+    //private void MoveToTarget()
+    //{
+    //    //Moves towards current pathfinding point
+    //    //For now this does nothing, since we're using the built-in agent self-movement
+    //    //Once we transition to an independant pathfinder, this will move our unit towards the next pathfinding point (and away from nearby units? idk)
+    //}
 
 
 
@@ -214,45 +248,46 @@ public class NetworkedBaddie : NetworkBehaviour
         //MoveToTarget();
     }
 
-    [ServerCallback]
-    void OnCollisionEnter(Collision col)
-    {
+    //[ServerCallback]
+    //void OnCollisionEnter(Collision col)
+    //{
         
 
-    }
+    //}
 
-    public float GetCurrentHealth()
-    {
-        return currentHealth;
-    }
+    //All of the below is now moved to the Damageable component
+    //public float GetCurrentHealth()
+    //{
+    //    return currentHealth;
+    //}
 
-    public float GetMaxHealth()
-    {
-        return maxHealth;
-    }
+    //public float GetMaxHealth()
+    //{
+    //    return maxHealth;
+    //}
 
-    //We don't need to worry about players randomly calling this, since they don't have authority over Baddies (I mean, except the host. /shrug)
-    public void TakeDamage(float damageAmount)
-    {
-        //Fow now this is super duper simple. No armor/etc.
-        currentHealth -= damageAmount;
+    ////We don't need to worry about players randomly calling this, since they don't have authority over Baddies (I mean, except the host. /shrug)
+    //public void TakeDamage(float damageAmount)
+    //{
+    //    //Fow now this is super duper simple. No armor/etc.
+    //    currentHealth -= damageAmount;
 
-        //Now that we've taken damage, we'll check if we're dead
-        CheckDeath();
+    //    //Now that we've taken damage, we'll check if we're dead
+    //    CheckDeath();
 
-        //We may want to have a 'stagger' check/animation/etc. happen here
+    //    //We may want to have a 'stagger' check/animation/etc. happen here
 
-    }
+    //}
 
-    //Used to have a single check to see if health is too low, or whatever other things we might throw on, and to trigger BaddieDie as appropriate
-    private void CheckDeath()
-    {
-        //For now, we just check if currentHeatlh <= 0
-        if(currentHealth <= 0f)
-        {
-            BaddieDie();
-        }
-    }
+    ////Used to have a single check to see if health is too low, or whatever other things we might throw on, and to trigger BaddieDie as appropriate
+    //private void CheckDeath()
+    //{
+    //    //For now, we just check if currentHeatlh <= 0
+    //    if(currentHealth <= 0f)
+    //    {
+    //        BaddieDie();
+    //    }
+    //}
 
     private void BaddieDie()
     {
@@ -264,12 +299,12 @@ public class NetworkedBaddie : NetworkBehaviour
 
     }
 
-    //Remember, these hook functions need to take in the old value and the new value, even if we don't use both
-    public void HealthUpdated(float oldHP, float newHP)
-    {
-        //This would be where we update UI related to this, play a sound, display damage numbers, etc.
+    ////Remember, these hook functions need to take in the old value and the new value, even if we don't use both
+    //public void HealthUpdated(float oldHP, float newHP)
+    //{
+    //    //This would be where we update UI related to this, play a sound, display damage numbers, etc.
 
-    }
+    //}
 
     //[ContextMenu(("Send Path to Debug"))]
     //private void PathToDebug()
@@ -285,4 +320,10 @@ public class NetworkedBaddie : NetworkBehaviour
     //    }
     //}
 
+}
+
+public enum BaddieAttackType
+{
+    Raycast,
+    Projectile
 }

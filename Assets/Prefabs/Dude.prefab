@@ -400,9 +400,10 @@ GameObject:
   - component: {fileID: 1908461316057556142}
   - component: {fileID: 2700563352070716213}
   - component: {fileID: 7864231426426681297}
+  - component: {fileID: 3504947317564282680}
   m_Layer: 13
   m_Name: Dude
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -504,11 +505,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.05
+  syncInterval: 0
   clientAuthority: 1
   localPositionSensitivity: 0.01
   localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
+--- !u!114 &3504947317564282680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908461316057556139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 581442b724444f74db2bceb4b2675deb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0
+  currentHealth: 0
+  maxHealth: 100
 --- !u!1 &1908461316279029045
 GameObject:
   m_ObjectHideFlags: 0
@@ -523,7 +540,7 @@ GameObject:
   - component: {fileID: 1908461316279029051}
   m_Layer: 13
   m_Name: Capsule
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

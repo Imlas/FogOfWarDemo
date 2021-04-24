@@ -9,11 +9,18 @@ public class ToDo
      * xBring in the existing player (Dude) objects, drop the FoV/FoW system
      * 
      * xBring in baddieSpawners and baddies
-     * Finish making both of them Damageable
-     * Finish splitting Baddies into Pathfinder/Attacker/Damageable
+     * xFinish making both of them Damageable
+     * xFinish splitting Baddies into Pathfinder/Attacker/Damageable
      * Add some basic baddie attack animation
      * 
      * Make baddies do damage to player-tagged damageables
+     * 
+     * Add health bars? Or at least a player HP UI HUD element
+     * 
+     * Add in ADSing
+     * -ADS slows movement speed, but decreases the spread angle of shots
+     * -Perhaps certain (heavy) weapons can only be used ADS (ie. no rocket shooting from the hip)
+     * -I tentatively like the idea of aim aiming laser style visual for this (and will help on controller)
      * 
      * Make a basic Cylinder+Sphere topper + cube barrel tower model
      * Make player towers
