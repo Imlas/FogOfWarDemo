@@ -139,6 +139,15 @@ public class NetworkedBaddie : NetworkBehaviour
         {
             return false;
         }
+
+        //Debug.Log($"Current firePoint rotation {firePoint.rotation.eulerAngles}");
+
+        Vector3 fromDirection = firePoint.forward;
+        Vector3 toDirection = (currentTarget.transform.position - this.gameObject.transform.position); //Not sure if this should be the firePoint.position
+
+        Quaternion differenceQuat = Quaternion.FromToRotation(fromDirection, toDirection);
+        //Debug.Log($"Difference in rotation {differenceQuat.eulerAngles}");
+
         return true; //Obviously there should be some math here comparing the difference of an angle with maxFireAngleDifference
     }
 

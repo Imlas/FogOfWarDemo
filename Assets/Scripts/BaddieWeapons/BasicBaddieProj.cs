@@ -19,7 +19,7 @@ public class BasicBaddieProj : NetworkBehaviour
     [ServerCallback]
     void OnTriggerEnter(Collider col)
     {
-        Debug.Log($"BaddieProj collided with {col.gameObject.name}");
+        //Debug.Log($"BaddieProj collided with {col.gameObject.name}");
         if (!hasHit)
         {
             //...probably a better way to structure this, but it works
