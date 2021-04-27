@@ -24,7 +24,7 @@ public class NetworkedBaddie : NetworkBehaviour
     //[SerializeField] private float turnRate;
 
     [SerializeField] private float attackRange;
-    [SerializeField] private Transform firePoint;
+    [SerializeField] public Transform firePoint;
     [SerializeField] private BaddieAttackType attackType;
     [SerializeField] private GameObject projAttackGO;
     [SerializeField] private VFXType raycastAttackVFX;
@@ -142,13 +142,17 @@ public class NetworkedBaddie : NetworkBehaviour
 
         //Debug.Log($"Current firePoint rotation {firePoint.rotation.eulerAngles}");
 
-        Vector3 fromDirection = firePoint.forward;
         Vector3 toDirection = (currentTarget.transform.position - this.gameObject.transform.position); //Not sure if this should be the firePoint.position
 
-        Quaternion differenceQuat = Quaternion.FromToRotation(fromDirection, toDirection);
+        Quaternion differenceQuat = Quaternion.FromToRotation(firePoint.forward, toDirection);
         //Debug.Log($"Difference in rotation {differenceQuat.eulerAngles}");
 
-        return true; //Obviously there should be some math here comparing the difference of an angle with maxFireAngleDifference
+        if(differenceQuat.eulerAngles.y > maxFireAngleDifference)
+        {
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -163,8 +167,26 @@ public class NetworkedBaddie : NetworkBehaviour
         {
             case BaddieAttackType.Raycast:
                 //This type targets the player, locks in the angle, and begins charging up a (likely shortish range) hitscan attack. After charge time do the raycast (or check a collider for width), and spawn vfx as appropriate
+                VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, VFXType.BaddieAttackWarmup, firePoint.position, firePoint.rotation);
+                baddiePathfinder.isStationary = true;
 
-                //foo
+                StartCoroutine(VFXSpawner.Timeout(
+                    () =>
+                    {
+                        VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, VFXType.BaddieAttackFlare, firePoint.position, firePoint.rotation);
+                        //Do the collision check for the attack
+
+                        //baddiePathfinder.isStationary = false;
+                    }, 1f));
+
+                //Adding in more delay before the baddie can move again while it's in the animation for the attack
+                //Debug.Log($"VFX Spawned. stationary is {baddiePathfinder.isStationary}");
+                StartCoroutine(VFXSpawner.Timeout(
+                    () =>
+                    {
+                        baddiePathfinder.isStationary = false;
+                    }, 2.0f));
+
                 break;
             case BaddieAttackType.Projectile:
                 //This case points at the target (ie. player), then spawns(? - might need to instantiate an invis server GO and targetted VFX) the shot which will either shoot past the target or stop (and maybe explode? think missles/grenades)

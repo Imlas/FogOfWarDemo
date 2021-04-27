@@ -11,9 +11,10 @@ public class BaddiePathfinder : NetworkBehaviour
 
     Path path;
     int currentWaypoint;
-    public bool reachedEndOfPath;
+    //public bool reachedEndOfPath;
 
     [SerializeField] GameObject targetGO;
+    [SerializeField] public bool isStationary = false;
 
     [SerializeField] LayerMask LoSBlockerMask;
     [SerializeField] float speed = 5.5f;
@@ -90,7 +91,7 @@ public class BaddiePathfinder : NetworkBehaviour
     void Update()
     {
         //If we don't have a target, then just exit out
-        if(targetGO == null)
+        if(targetGO == null || isStationary)
         {
             return;
         }
@@ -103,9 +104,15 @@ public class BaddiePathfinder : NetworkBehaviour
             StartPathTo(targetGO);
         }
 
-        //If we don't have a path (either still getting one, or we've reached the end, then exit out
+        //If we don't have a path (either still getting one, or we've reached the end, then rotate towards the targetGO and then exit out
         if(path == null)
         {
+            Vector3 targetDir = targetGO.transform.position - this.transform.position;
+            float rotAngle = -1 * (Mathf.Atan2(targetDir.z, targetDir.x) * Mathf.Rad2Deg - 90f);
+            //Gonna be super honest - no idea why I have to negative the angle I get from this. But it works.
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0f, rotAngle, 0f), turnSpeed * Time.deltaTime);
+            //Debug.Log($"No path, but rotating towards target GO at {targetGO.transform.position}. Rotation angle of {rotAngle}");
+
             return;
         }
 
@@ -154,9 +161,6 @@ public class BaddiePathfinder : NetworkBehaviour
         float angle = -1 * (Mathf.Atan2(pathDir.z, pathDir.x) * Mathf.Rad2Deg - 90f);
         //Gonna be super honest - no idea why I have to negative the angle I get from this. But it works.
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0f, angle, 0f), turnSpeed * Time.deltaTime);
-
-
-
     }
 
     [ServerCallback]

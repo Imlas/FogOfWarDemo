@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
@@ -14,6 +15,8 @@ public class VFXSpawner : NetworkBehaviour
     [SerializeField] private GameObject aRifleMuzzleFlash;
     [SerializeField] private GameObject aRifleBulletStreak;
     [SerializeField] private GameObject aRifleBulletHit;
+    [SerializeField] private GameObject baddieAttackWarmup;
+    [SerializeField] private GameObject baddieAttackFlare;
 
 
 
@@ -62,8 +65,20 @@ public class VFXSpawner : NetworkBehaviour
 
             case VFXType.ARifleBulletHit:
                 vfxGO = Instantiate(aRifleBulletHit, _position, _rotation);
-
                 break;
+
+            case VFXType.BaddieAttackWarmup:
+                trans = networkIdentity.gameObject.GetComponent<NetworkedBaddie>().firePoint;
+                vfxGO = Instantiate(baddieAttackWarmup, _position, _rotation);
+                vfxGO.GetComponent<FollowTransform>().targetTrans = trans;
+                break;
+
+            case VFXType.BaddieAttackFlare:
+                trans = networkIdentity.gameObject.GetComponent<NetworkedBaddie>().firePoint;
+                vfxGO = Instantiate(baddieAttackFlare, _position, _rotation);
+                vfxGO.GetComponent<FollowTransform>().targetTrans = trans;
+                break;
+
             default:
                 Debug.Log("Unplanned case error for RPCSpawnVFX");
                 break;
@@ -91,7 +106,24 @@ public class VFXSpawner : NetworkBehaviour
 
     }
 
+    /* From https://answers.unity.com/questions/1582657/how-do-i-delay-instantiating-a-prefab.html
+     * Usage will be the following
+     *  StartCoroutine(Timeout(
+     () => {
+         //This will be the code executed
+         Instantiate(foo);
+     }, 2f));
+    */
+    public static IEnumerator Timeout(Action action, float time)
+    {
+        //yield return new WaitForSecondsRealtime(time);
+        yield return new WaitForSeconds(time);
+
+        action();
+    }
+
 }
+
 
 
 
@@ -100,6 +132,8 @@ public enum VFXType
     TestCube,
     ARifleMuzzleFlash,
     ARifleBulletStreak,
-    ARifleBulletHit
+    ARifleBulletHit,
+    BaddieAttackWarmup,
+    BaddieAttackFlare
 }
 

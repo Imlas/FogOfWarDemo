@@ -13,7 +13,12 @@ public class ToDo
      * xFinish splitting Baddies into Pathfinder/Attacker/Damageable
      * Add some basic baddie attack animation
      * 
-     * Make baddies do damage to player-tagged damageables
+     * Baddie pathfinding is a little janky (surprise surprise) when they get close to the target
+     * -Need to maybe increase repath-rate when close, or add in a check for "if in LoS, then just go straight at them"
+     * -Simmilarly, still want to add in some local avoidance of other baddies
+     * -Also, running into a bug where the baddie pathing target is updating, but not the networkbaddie target (ie. for attacking)
+     * 
+     * xMake baddies do damage to player-tagged damageables
      * 
      * Add health bars? Or at least a player HP UI HUD element
      * 

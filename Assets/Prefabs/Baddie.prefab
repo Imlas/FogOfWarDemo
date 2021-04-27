@@ -294,7 +294,7 @@ MonoBehaviour:
   syncInterval: 0.1
   attackRange: 5
   firePoint: {fileID: 1660041103228870030}
-  attackType: 1
+  attackType: 0
   projAttackGO: {fileID: 1152770010904203422, guid: 6b09b3bd95ce7904892371f8602816ba, type: 3}
   raycastAttackVFX: 0
   lastTargetScan: -Infinity
