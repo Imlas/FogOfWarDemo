@@ -16,6 +16,11 @@ public class BaddiePathfinder : NetworkBehaviour
     [SerializeField] GameObject targetGO;
     [SerializeField] public bool isStationary = false;
 
+    [SerializeField] float pathStrength = 1f;
+    [SerializeField] float avoidStrength = 0.5f;
+    [SerializeField] float avoidRadius = 1f;
+    [SerializeField] LayerMask baddieLayerMask;
+
     [SerializeField] LayerMask LoSBlockerMask;
     [SerializeField] float speed = 5.5f;
     [SerializeField] float turnSpeed = 10f;
@@ -93,6 +98,7 @@ public class BaddiePathfinder : NetworkBehaviour
         //If we don't have a target, then just exit out
         if(targetGO == null || isStationary)
         {
+            currentVelocity = Vector3.zero;
             return;
         }
 
@@ -151,14 +157,48 @@ public class BaddiePathfinder : NetworkBehaviour
             }
         }
 
-        //So now we just need to move towards the currentWaypoint
-        Vector3 pathDir = (path.vectorPath[currentWaypoint] - this.transform.position).normalized;
+        Vector3 pathDir;
+        //At this point, if we can directly see the objective, just go straight towards it
+        if (!Physics.Raycast(this.transform.position, nonYTarget, nonYTarget.magnitude, LoSBlockerMask))
+        {
+            pathDir = nonYTarget.normalized;
+            Debug.Log($"Direct LoS to point {nonYTarget} which is {nonYTarget.magnitude}. Moving straight to target");
+        }
+        else
+        {
+            //Otherwise, head down the path
+            pathDir = (path.vectorPath[currentWaypoint] - this.transform.position).normalized;
+            Debug.Log($"No direct LoS. Moving along path");
 
-        currentVelocity = pathDir * speed;
+        }
+
+
+        //Find nearby other baddies so we can move away from them
+        Vector3 avoidDir = Vector3.zero;
+
+        Collider[] otherBaddieCol = Physics.OverlapSphere(this.transform.position, avoidRadius, baddieLayerMask);
+        Debug.Log($"{otherBaddieCol.Length} baddies found nearby.");
+        foreach(Collider baddieCol in otherBaddieCol)
+        {
+            if (baddieCol.CompareTag(TagManager.baddieTag) && !baddieCol.transform.IsChildOf(this.gameObject.transform)) //Double checking the tag - not really needed
+            {
+                avoidDir += (this.transform.position - baddieCol.gameObject.transform.position);
+                Debug.Log($"Baddie found at {baddieCol.gameObject.transform.position}. New avoid vector: {avoidDir}");
+            }
+        }
+        avoidDir = new Vector3(avoidDir.x, 0f, avoidDir.z);
+
+
+        //Combine the direction of the goal, and our avoidance direction
+        currentVelocity = ((pathDir * pathStrength) + (avoidDir.normalized * avoidStrength)).normalized * speed;
+
+        //currentVelocity = pathDir * speed;
         //Debug.Log($"Pos: {this.transform.position}, Point:{path.vectorPath[currentWaypoint]} {currentWaypoint}");
 
         //Next we rotate towards the direction of pathDir
-        float angle = -1 * (Mathf.Atan2(pathDir.z, pathDir.x) * Mathf.Rad2Deg - 90f);
+        //float angle = -1 * (Mathf.Atan2(pathDir.z, pathDir.x) * Mathf.Rad2Deg - 90f);
+        float angle = -1 * (Mathf.Atan2(currentVelocity.z, currentVelocity.x) * Mathf.Rad2Deg - 90f);
+
         //Gonna be super honest - no idea why I have to negative the angle I get from this. But it works.
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0f, angle, 0f), turnSpeed * Time.deltaTime);
     }

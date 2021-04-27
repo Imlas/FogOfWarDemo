@@ -11003,9 +11003,17 @@ PrefabInstance:
       value: Baddie
       objectReference: {fileID: 0}
     - target: {fileID: 1017553899939424758, guid: fd3ea37085786dd41ab752e59c6acb7d, type: 3}
+      propertyPath: maxBaddies
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1017553899939424758, guid: fd3ea37085786dd41ab752e59c6acb7d, type: 3}
       propertyPath: baddieProto
       value: 
       objectReference: {fileID: 7291375968447318362, guid: f45b100b3195b624eba5100b31b58285, type: 3}
+    - target: {fileID: 1017553899939424758, guid: fd3ea37085786dd41ab752e59c6acb7d, type: 3}
+      propertyPath: timeBetweenSpawns
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1017553899939424759, guid: fd3ea37085786dd41ab752e59c6acb7d, type: 3}
       propertyPath: m_RootOrder
       value: 9

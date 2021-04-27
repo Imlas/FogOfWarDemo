@@ -24,10 +24,12 @@ public class NetworkedBaddie : NetworkBehaviour
     //[SerializeField] private float turnRate;
 
     [SerializeField] private float attackRange;
+    [SerializeField] private float rayCastAttackDamage;
     [SerializeField] public Transform firePoint;
     [SerializeField] private BaddieAttackType attackType;
     [SerializeField] private GameObject projAttackGO;
     [SerializeField] private VFXType raycastAttackVFX;
+    [SerializeField] private LayerMask playerLayerMask;
 
     //[SerializeField] private float stopDistance; //stop distance should be smaller than attackDistance
 
@@ -175,6 +177,19 @@ public class NetworkedBaddie : NetworkBehaviour
                     {
                         VFXSpawner.Instance.RPCSpawnVFX(this.netIdentity, VFXType.BaddieAttackFlare, firePoint.position, firePoint.rotation);
                         //Do the collision check for the attack
+                        Vector3 point1 = firePoint.transform.position;
+                        Vector3 point2 = firePoint.transform.position + firePoint.forward * attackRange;
+
+                        Collider[] colliders = Physics.OverlapCapsule(point1, point2, 0.25f, playerLayerMask);
+
+                        for (int i = 0; i < colliders.Length; i++)
+                        {
+                            if (colliders[i].CompareTag(TagManager.playerTag))
+                            {
+                                colliders[i].GetComponentInParent<Damageable>().TakeDamage(rayCastAttackDamage);
+                            }
+                        }
+
 
                         //baddiePathfinder.isStationary = false;
                     }, 1f));

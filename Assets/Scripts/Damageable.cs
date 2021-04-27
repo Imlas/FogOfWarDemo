@@ -45,6 +45,7 @@ public class Damageable : NetworkBehaviour
 
                 //Have VFX shown for a death thing (should that be stored in this class? a deathExplosion VFX?)
 
+                BaddieManager.Instance.RemoveBaddie(this.gameObject);
                 NetworkManager.Destroy(this.gameObject);
 
             }

@@ -11,7 +11,7 @@ public class ToDo
      * xBring in baddieSpawners and baddies
      * xFinish making both of them Damageable
      * xFinish splitting Baddies into Pathfinder/Attacker/Damageable
-     * Add some basic baddie attack animation
+     * xAdd some basic baddie attack animation
      * 
      * Baddie pathfinding is a little janky (surprise surprise) when they get close to the target
      * -Need to maybe increase repath-rate when close, or add in a check for "if in LoS, then just go straight at them"

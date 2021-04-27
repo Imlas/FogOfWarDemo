@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8253941979533807844}
   - component: {fileID: 6178964469764265607}
   - component: {fileID: 3569860702387035264}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1660041103228870030}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 7291375968351531164}
   - component: {fileID: 7291375968351531163}
   - component: {fileID: 744947769704339569}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Sphere
   m_TagString: Baddie
   m_Icon: {fileID: 0}
@@ -247,16 +247,16 @@ GameObject:
   m_Component:
   - component: {fileID: 7291375968447318367}
   - component: {fileID: 7291375968447318365}
+  - component: {fileID: 5760763625613468681}
   - component: {fileID: 7291375968447318364}
   - component: {fileID: 7291375968447318363}
   - component: {fileID: 5042985828496846331}
-  - component: {fileID: 5760763625613468681}
   - component: {fileID: 7645013394456624079}
   - component: {fileID: -403487086572262541}
   - component: {fileID: -7785897068128146508}
   - component: {fileID: -2311657214888951181}
   - component: {fileID: 2748266261480607040}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Baddie
   m_TagString: Baddie
   m_Icon: {fileID: 0}
@@ -292,15 +292,49 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  attackRange: 5
+  attackRange: 3
+  rayCastAttackDamage: 10
   firePoint: {fileID: 1660041103228870030}
   attackType: 0
   projAttackGO: {fileID: 1152770010904203422, guid: 6b09b3bd95ce7904892371f8602816ba, type: 3}
   raycastAttackVFX: 0
+  playerLayerMask:
+    serializedVersion: 2
+    m_Bits: 8192
   lastTargetScan: -Infinity
   targetScanDelay: 5
   maxFireAngleDifference: 15
   attackCooldown: 2
+--- !u!114 &5760763625613468681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7291375968447318362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c46b0be0df1c1843bb2498060329aa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  targetGO: {fileID: 0}
+  isStationary: 0
+  pathStrength: 1
+  avoidStrength: 0.5
+  avoidRadius: 2
+  baddieLayerMask:
+    serializedVersion: 2
+    m_Bits: 16384
+  LoSBlockerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  speed: 4
+  turnSpeed: 180
+  nextWaypointMinDistance: 0.25
+  rePathRate: 0.5
+  finalStopDistance: 2.5
 --- !u!114 &7291375968447318364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,35 +381,11 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &5760763625613468681
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7291375968447318362}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c46b0be0df1c1843bb2498060329aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  reachedEndOfPath: 0
-  targetGO: {fileID: 0}
-  LoSBlockerMask:
-    serializedVersion: 2
-    m_Bits: 128
-  speed: 4
-  turnSpeed: 180
-  nextWaypointMinDistance: 0.25
-  rePathRate: 0.5
-  finalStopDistance: 3
 --- !u!114 &7645013394456624079
 MonoBehaviour:
   m_ObjectHideFlags: 0
